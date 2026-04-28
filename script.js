@@ -682,15 +682,20 @@ function FAQ() {
                   </svg>
                 </div>
               </button>
+              
+              {/* === INI BAGIAN YANG DIPERBAIKI === */}
               <div style={{
-                  maxHeight: openIdx === i ? '600px' : '0',
-                  overflow: 'hidden',
-                  transition: 'max-height 0.4s cubic-bezier(.22,1,.36,1)',
-                }}>
-                <p className="px-6 pb-6 text-gray-500 text-sm leading-relaxed" style={{paddingLeft:'1.5rem'}}>
+                maxHeight: openIdx === i ? '600px' : '0px',
+                opacity: openIdx === i ? '1' : '0',
+                overflow: 'hidden',
+                transition: 'all 0.4s cubic-bezier(.22,1,.36,1)',
+              }}>
+                <p className="px-6 pb-6 text-slate-700 text-sm leading-relaxed" style={{paddingLeft:'1.5rem'}}>
                   {faq.a}
                 </p>
               </div>
+              {/* ================================== */}
+              
             </div>
           ))}
         </div>
