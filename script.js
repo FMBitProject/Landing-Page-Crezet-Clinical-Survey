@@ -560,7 +560,7 @@ function VideoSection() {
             <iframe
               className="absolute top-0 left-0 w-full h-full"
               // GANTI URL DI BAWAH INI DENGAN LINK EMBED YOUTUBE KAMU
-              src="https://www.youtube.com/embed/gGdGFtwCNBE"
+              src="https://www.youtube.com/embed/rPuSil5lzXA"
               title="Video Panduan Teknis"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
