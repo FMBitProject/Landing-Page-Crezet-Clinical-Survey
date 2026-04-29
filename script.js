@@ -42,7 +42,7 @@ function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src="uploads/Daewoong Header for questionaire.png"
+            src="Daewoong Header for questionaire.png"
             alt="Daewoong Indonesia"
             className="h-9 w-auto object-contain"
             style={{filter: 'none'}}
@@ -820,7 +820,7 @@ function Documents() {
     {
       title: 'Panduan Survei Klinis Crezet 2026',
       desc: 'Dokumen panduan lengkap pelaksanaan survei klinis Crezet 2026 oleh Daewoong Pharmaceutical Indonesia.',
-      file: 'uploads/Panduan Survei Klinis Crezet 2026 (Daewoong Pharmaceutical Indonesia) (2).pdf',
+      file: 'Panduan Survei Klinis Crezet 2026 (Daewoong Pharmaceutical Indonesia) (2).pdf',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
@@ -834,7 +834,7 @@ function Documents() {
     {
       title: 'Panduan CV Risk Kalkulator',
       desc: 'Panduan penggunaan kalkulator risiko kardiovaskular untuk penilaian klinis pasien dislipidemia.',
-      file: 'uploads/Panduan CV risk kalkulator.pdf',
+      file: 'Panduan CV risk kalkulator.pdf',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
@@ -848,7 +848,7 @@ function Documents() {
     {
       title: 'Panduan Pelaporan AE / SAE',
       desc: 'Prosedur lengkap pelaporan Adverse Event dan Serious Adverse Event sesuai standar survei klinis.',
-      file: 'uploads/Panduan_Pelaporan_AE_SAE (1).pdf',
+      file: 'Panduan_Pelaporan_AE_SAE (1).pdf',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
@@ -863,7 +863,7 @@ function Documents() {
     {
       title: 'Troubleshooting Guide',
       desc: 'Panduan pemecahan masalah teknis seputar pengisian data, spreadsheet, dan sistem entri survei.',
-      file: 'uploads/Troubleshooting Guide.pdf',
+      file: 'Troubleshooting Guide.pdf',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
@@ -990,7 +990,7 @@ function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-5">
               <img
-                src="uploads/Daewoong Header for questionaire.png"
+                src="Daewoong Header for questionaire.png"
                 alt="Daewoong Indonesia"
                 className="h-8 w-auto object-contain"
                 style={{filter:'brightness(0) invert(1) opacity(0.8)'}}
