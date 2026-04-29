@@ -451,9 +451,9 @@ function Timeline() {
       items: ['Dokumentasi dosis Crezet aktual','Hasil lab LDL & HDL terbaru','Evaluasi CV Risk (ESC 2025)','Pencatatan efek samping (AE/SAE)','Nilai SGPT, SGOT, CK jika relevan','Kepatuhan penggunaan obat'],
     },
     {
-      week: 'Minggu ke-24 (±8 minggu)', // <--- Ditambahkan di sini
+      week: 'Minggu ke-24', // <-- Dikembalikan normal
       label: 'Pengamatan Rutin II',
-      badge: 'Toleransi ±8 minggu', // <--- Disesuaikan juga di badgenya
+      badge: 'Toleransi ±4 minggu', // <-- Dikembalikan ke ±4 minggu
       color: '#7c3aed',
       items: ['Dokumentasi dosis Crezet akhir','Hasil lab LDL & HDL akhir survei','Evaluasi CV Risk (ESC 2025)','Laporan lengkap AE/SAE','Finalisasi data pasien','Verifikasi kelengkapan data'],
     },
@@ -476,14 +476,12 @@ function Timeline() {
         </div>
 
         <div className="relative">
-          {/* Desktop connector line */}
           <div className="hidden md:block absolute top-12 left-0 right-0 h-0.5 mx-20"
             style={{background:'linear-gradient(to right,#3b6fe8,#0d9488,#7c3aed)'}}></div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {steps.map((step, i) => (
               <div key={i} className={`fade-in-up delay-${(i+1)*100} relative`}>
-                {/* Node */}
                 <div className="flex justify-center mb-6">
                   <div className="relative">
                     <div className="w-10 h-10 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm z-10 relative"
@@ -529,7 +527,8 @@ function Timeline() {
           <div className="inline-flex items-center gap-3 bg-pharma-50 rounded-2xl px-8 py-4 border border-pharma-100">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b6fe8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span className="text-pharma-700 font-medium">Total durasi pengamatan:</span>
-            <span className="font-display font-bold text-pharma-900 text-lg" style={{fontFamily:'DM Sans,sans-serif'}}>24 Minggu</span>
+            {/* ±8 minggu dipindah ke sini */}
+            <span className="font-display font-bold text-pharma-900 text-lg" style={{fontFamily:'DM Sans,sans-serif'}}>24 Minggu (±8 minggu)</span>
             <span className="text-gray-400 text-sm">| ~6 bulan per pasien</span>
           </div>
         </div>
@@ -1134,11 +1133,9 @@ function Documents() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {docs.map((doc, i) => (
             <div key={i} className={`fade-in-up delay-${(i+1)*100} card-hover bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col`}>
-              {/* Top accent bar */}
               <div className="h-1.5 w-full" style={{background:doc.color}}></div>
 
               <div className="p-7 flex flex-col flex-1">
-                {/* Icon + tag — always visible */}
                 <div className="flex items-start justify-between mb-5">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{background:doc.bg, color:doc.color}}>
@@ -1150,15 +1147,14 @@ function Documents() {
                   </span>
                 </div>
 
-                {/* Title — always visible */}
-                <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
-                  {doc.title}
-                </h3>
-
-                {/* Locked: blurred placeholder | Unlocked: full content */}
                 {isUnlocked(doc.file) ? (
                   <>
+                    {/* Judul dan deskripsi tampil jelas jika sudah di-unlock */}
+                    <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
+                      {doc.title}
+                    </h3>
                     <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">{doc.desc}</p>
+                    
                     <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                       <div className="flex items-center gap-1.5 text-gray-400 text-xs">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -1176,14 +1172,16 @@ function Documents() {
                   </>
                 ) : (
                   <div className="flex-1 flex flex-col">
-                    {/* Blurred description placeholder */}
-                    <div className="flex-1 mb-6 relative overflow-hidden">
-                      {/* Dibuat lebih blur dan teks diulang agar terlihat sebagai blok penuh */}
-                      <div className="text-gray-400 text-sm leading-relaxed select-none" style={{filter:'blur(6px)', userSelect:'none', pointerEvents:'none', opacity: 0.6}}>
-                        {doc.desc} {doc.desc} {doc.desc}
-                      </div>
+                    {/* Judul dan deskripsi di-blur bersamaan dalam 1 container, dengan teks normal (tidak terlalu wide) */}
+                    <div className="flex-1 mb-6 relative select-none" style={{filter:'blur(5px)', userSelect:'none', pointerEvents:'none', opacity: 0.6}}>
+                      <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
+                        {doc.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {doc.desc}
+                      </p>
                     </div>
-                    {/* Locked footer */}
+
                     <div className="pt-4 border-t border-gray-50">
                       <button onClick={() => setModalDoc(doc)}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-md border-2"
@@ -1201,7 +1199,6 @@ function Documents() {
           ))}
         </div>
 
-        {/* All-in-one download hint */}
         <div className="fade-in-up mt-8 flex items-center justify-center gap-4 text-sm text-gray-400">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Dokumen bersifat <span className="font-medium text-pharma-500">konfidensial</span> — dilindungi password untuk penggunaan internal tim survei klinis.
