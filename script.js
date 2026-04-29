@@ -559,8 +559,7 @@ function VideoSection() {
           <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-gray-200" style={{ paddingTop: '56.25%' }}>
             <iframe
               className="absolute top-0 left-0 w-full h-full"
-              // GANTI URL DI BAWAH INI DENGAN LINK EMBED YOUTUBE KAMU
-              src="https://www.youtube.com/embed/rPuSil5lzXA"
+              src="https://www.youtube.com/embed/FC3y9llDXuM"
               title="Video Panduan Teknis"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -583,6 +582,262 @@ function VideoSection() {
           </div>
         </div>
       </div>
+    </section>
+  );
+}
+
+/* ── Multi-Step Form (Konfirmasi & MOU) ── */
+function SurveyForm() {
+  const [step, setStep] = useState(1); // 1 = Konfirmasi, 2 = MOU, 3 = Sukses Semua
+  const [loading, setLoading] = useState(false);
+  
+  // GANTI URL INI DENGAN WEB APP URL DARI APPS SCRIPT!
+  const scriptURL = 'MASUKKAN_URL_WEB_APP_KAMU_DISINI';
+
+  function submitKonfirmasi(e) {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    formData.append("formType", "konfirmasi"); // Penanda Form 1
+    
+    fetch(scriptURL, { method: 'POST', body: formData })
+      .then(() => {
+        setLoading(false);
+        setStep(2); // Lanjut ke Form 2
+        window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+      })
+      .catch(error => {
+        console.error('Error!', error.message);
+        setLoading(false);
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+      });
+  }
+
+  function submitMOU(e) {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    formData.append("formType", "mou"); // Penanda Form 2
+    
+    fetch(scriptURL, { method: 'POST', body: formData })
+      .then(() => {
+        setLoading(false);
+        setStep(3); // Menuju halaman sukses
+        window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+      })
+      .catch(error => {
+        console.error('Error!', error.message);
+        setLoading(false);
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+      });
+  }
+
+  return (
+    <section id="form" className="py-24 bg-white border-t border-pharma-100 transition-all duration-500">
+      <div className="max-w-4xl mx-auto px-6">
+        
+        {/* === STEP 1: FORM KONFIRMASI === */}
+        {step === 1 && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-10">
+              <span className="badge text-pharma-500 mb-4 inline-flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Tahap 1 dari 2
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Form Konfirmasi Panduan</h2>
+              <p className="text-gray-500 text-lg">Silakan isi form ini setelah Anda mempelajari panduan dan video tutorial.</p>
+            </div>
+
+            <div className="bg-pharma-50 p-8 md:p-10 rounded-3xl border border-pharma-100 shadow-sm">
+              <form onSubmit={submitKonfirmasi} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-pharma-900 mb-2">Nama Dokter</label>
+                    <input type="text" name="namaDokter" required placeholder="Contoh: Dr. Budi Santoso, Sp.PD" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-pharma-900 mb-2">Tempat Praktek</label>
+                    <input type="text" name="tempatPraktek" required placeholder="Contoh: RS Medika Utama" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-100">
+                  <label className="block text-sm font-semibold text-pharma-900 mb-3">Apakah Anda mengerti dan paham tentang Panduan Survey Klinis?</label>
+                  <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="pahamPanduan" value="Ya" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
+                      <span className="text-gray-700">Ya, Paham</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="pahamPanduan" value="Belum" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
+                      <span className="text-gray-700">Belum Paham</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-gray-100">
+                  <label className="block text-sm font-semibold text-pharma-900 mb-3">Apakah Anda mengerti dan paham tentang video tutorial yang diberikan?</label>
+                  <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="pahamVideo" value="Ya" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
+                      <span className="text-gray-700">Ya, Paham</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="pahamVideo" value="Belum" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
+                      <span className="text-gray-700">Belum Paham</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-pharma-900 mb-2">Pertanyaan untuk Team Daewoong (Opsional)</label>
+                  <textarea name="pertanyaan" rows="3" placeholder="Tuliskan pertanyaan Anda di sini..." className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all resize-none"></textarea>
+                </div>
+
+                <button type="submit" disabled={loading} className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-pharma-600 hover:bg-pharma-700 shadow-lg'}`}>
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      Menyimpan...
+                    </>
+                  ) : 'Lanjut ke Form Kelengkapan MOU →'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* === STEP 2: FORM KELENGKAPAN MOU === */}
+        {step === 2 && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-10">
+              <span className="badge text-teal-600 bg-teal-50 mb-4 inline-flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Tahap 2 dari 2
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Form Kelengkapan Data MOU</h2>
+              <p className="text-gray-500 text-lg">Konfirmasi awal berhasil. Mohon lengkapi data administratif berikut.</p>
+            </div>
+            
+            <form onSubmit={submitMOU} className="space-y-8 bg-white p-8 md:p-10 rounded-3xl border border-gray-200 shadow-xl">
+              
+              {/* Bagian 1: Data Klinik */}
+              <div>
+                <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">1. Informasi Legal Klinik/RS</h3>
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">1. Nama legal klinik sesuai akta notaris pendirian</label>
+                    <input type="text" name="legalKlinik" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">2. Alamat lengkap klinik (Kelurahan, Kec, Kota, Prov, Kode Pos)</label>
+                    <textarea name="alamatKlinik" rows="2" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none resize-none"></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">3. Nama perwakilan tanda tangan klinik</label>
+                    <input type="text" name="namaMewakili" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">4. Jabatan perwakilan (Misal: Direktur Utama)</label>
+                    <input type="text" name="jabatanMewakili" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">5. NIK sesuai KTP perwakilan</label>
+                    <input type="number" name="nik" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">11. Kepemilikan Klinik</label>
+                    <input type="text" name="kepemilikan" required placeholder="Contoh: Swasta / Pemerintah" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bagian 2: Data Dokter */}
+              <div>
+                <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">2. Data Dokter Penanggung Jawab</h3>
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">6. Jabatan dokter penanda tangan</label>
+                    <input type="text" name="jabatanDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">10. Background Dokter (Spesialis/Umum)</label>
+                    <input type="text" name="background" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">7. Alamat lengkap dokter penanda tangan</label>
+                    <textarea name="alamatDokter" rows="2" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none resize-none"></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">8. No. Telp aktif</label>
+                    <input type="tel" name="telpDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">9. Email aktif</label>
+                    <input type="email" name="emailDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bagian 3: Survey Tambahan */}
+              <div>
+                <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">3. Kuesioner Kelayakan</h3>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-4 rounded-xl">
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">12. Ketersediaan Crezet di Klinik Anda jika sudah tersedia (sebutkan dosisnya)</label>
+                    <input type="text" name="ketersediaan" required placeholder="Contoh: Tersedia 10/10mg" className="w-full px-4 py-2 rounded-lg border border-gray-300 outline-none" />
+                  </div>
+                  
+                  {[
+                    {name: 'q13', label: '13. Apakah dokter sudah dijelaskan mengenai Survey Klinis Crezet?'},
+                    {name: 'q14', label: '14. Apakah sudah dijelaskan bahwa biaya pembelian obat (Crezet) pasien survey tidak ditanggung Daewoong?'},
+                    {name: 'q15', label: '15. Apakah sudah dijelaskan pasien mendapatkan manfaat potongan harga pemeriksaan lab di minggu ke-12 dan 24?'},
+                    {name: 'q16', label: '16. Apakah dokter bersedia untuk terlibat dalam Survey Klinis Crezet?'}
+                  ].map((q, idx) => (
+                    <div key={idx} className="bg-gray-50 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <label className="text-sm font-semibold text-gray-800 flex-1">{q.label}</label>
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-1.5 cursor-pointer">
+                          <input type="radio" name={q.name} value="Sudah / Ya" required className="w-4 h-4 text-pharma-600" />
+                          <span className="text-sm font-medium">Ya / Sudah</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer">
+                          <input type="radio" name={q.name} value="Belum / Tidak" required className="w-4 h-4 text-pharma-600" />
+                          <span className="text-sm font-medium">Tidak / Belum</span>
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200">
+                <button type="submit" disabled={loading} className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5'}`}>
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      Menyimpan Data...
+                    </>
+                  ) : 'Kirim Seluruh Data MOU ✓'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* === STEP 3: SUKSES === */}
+        {step === 3 && (
+          <div className="animate-fade-in text-center py-12">
+            <div className="w-20 h-20 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Data Berhasil Disimpan!</h2>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">Terima kasih. Form Konfirmasi Panduan dan Kelengkapan Data MOU Anda telah terekam di dalam sistem kami.</p>
+          </div>
+        )}
+
+      </div>
+      <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } .animate-fade-in { animation: fadeIn 0.6s ease forwards; }`}</style>
     </section>
   );
 }
@@ -992,7 +1247,6 @@ function Footer() {
                 </li>
               ))}
             </ul>
-            {/* Bagian Potensial Bergabung sudah dihapus di sini */}
           </div>
 
           <div>
@@ -1022,137 +1276,7 @@ function Footer() {
     </footer>
   );
 }
-/* ── Form Pengisian (Koneksi Spreadsheet) ── */
-function SurveyForm() {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  
-  // GANTI URL INI DENGAN WEB APP URL DARI APPS SCRIPT!
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-
-    // Menggunakan FormData agar terhindar dari masalah CORS di Apps Script
-    const form = e.target;
-    const formData = new FormData(form);
-
-    fetch(scriptURL, { method: 'POST', body: formData })
-      .then(response => {
-        setSuccess(true);
-        setLoading(false);
-        form.reset(); // Mengosongkan form setelah berhasil
-        // Sembunyikan pesan sukses setelah 5 detik
-        setTimeout(() => setSuccess(false), 5000);
-      })
-      .catch(error => {
-        console.error('Error!', error.message);
-        setLoading(false);
-        alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
-      });
-  }
-
-  return (
-    <section id="form" className="py-24 bg-white border-t border-pharma-100">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="fade-in-up text-center mb-12">
-          <span className="badge text-pharma-500 mb-4 inline-flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            Konfirmasi
-          </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
-            Form Konfirmasi Panduan
-          </h2>
-          <p className="text-gray-500 text-lg">Silakan isi form ini setelah Anda mempelajari panduan dan video tutorial.</p>
-        </div>
-
-        <div className="fade-in-up bg-pharma-50 p-8 md:p-10 rounded-3xl border border-pharma-100">
-          
-          {success && (
-            <div className="mb-8 bg-teal-50 border border-teal-200 text-teal-800 px-6 py-4 rounded-xl flex items-center gap-4">
-              <div className="w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center text-white flex-shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
-              <div>
-                <h4 className="font-bold">Data Berhasil Dikirim!</h4>
-                <p className="text-sm text-teal-700">Terima kasih atas konfirmasi dan partisipasi Anda.</p>
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-pharma-900 mb-2">Nama Dokter</label>
-                <input type="text" name="namaDokter" required placeholder="Dr. John Doe, Sp.PD" 
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-pharma-900 mb-2">Tempat Praktek</label>
-                <input type="text" name="tempatPraktek" required placeholder="RS / Klinik..." 
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all" />
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-              <label className="block text-sm font-semibold text-pharma-900 mb-3">
-                Apakah Anda mengerti dan paham tentang Panduan Survey Klinis?
-              </label>
-              <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="pahamPanduan" value="Ya" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
-                  <span className="text-gray-700">Ya, Paham</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="pahamPanduan" value="Belum" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
-                  <span className="text-gray-700">Belum Paham</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-              <label className="block text-sm font-semibold text-pharma-900 mb-3">
-                Apakah Anda mengerti dan paham tentang video tutorial yang diberikan?
-              </label>
-              <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="pahamVideo" value="Ya" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
-                  <span className="text-gray-700">Ya, Paham</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="pahamVideo" value="Belum" required className="w-4 h-4 text-pharma-600 focus:ring-pharma-500" />
-                  <span className="text-gray-700">Belum Paham</span>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-pharma-900 mb-2">Pertanyaan untuk Team Daewoong (Opsional)</label>
-              <textarea name="pertanyaan" rows="3" placeholder="Tuliskan pertanyaan Anda di sini jika ada..." 
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-200 outline-none transition-all resize-none"></textarea>
-            </div>
-
-            <button type="submit" disabled={loading}
-              className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-pharma-600 hover:bg-pharma-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5'
-              }`}>
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Mengirim Data...
-                </>
-              ) : 'Kirim Konfirmasi'}
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-  );
-}
 /* ── App ── */
 function App() {
   useScrollReveal();
@@ -1167,7 +1291,7 @@ function App() {
       <VideoSection />
       <DoseCard />
       <Documents />
-      <SurveyForm />  {/* <--- FORM DITAMBAHKAN DI SINI */}
+      <SurveyForm /> {/* FORM ADA DI SINI */}
       <FAQ />
       <Footer />
     </div>
