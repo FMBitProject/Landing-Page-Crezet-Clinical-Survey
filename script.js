@@ -540,8 +540,6 @@ function Timeline() {
 
 /* ── Video Section ── */
 function VideoSection() {
-  const [playing, setPlaying] = useState(false);
-
   return (
     <section className="py-24 bg-pharma-50">
       <div className="max-w-4xl mx-auto px-6">
@@ -557,42 +555,21 @@ function VideoSection() {
         </div>
 
         <div className="fade-in-up">
-          <div className="video-container rounded-3xl overflow-hidden" style={{aspectRatio:'16/9',cursor:'pointer'}}
-            onClick={() => setPlaying(!playing)}>
-            {/* Stripe pattern overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Decorative grid */}
-              <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 20% 80%, rgba(59,111,232,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(20,184,166,0.2) 0%, transparent 50%)'}}></div>
-              
-              {/* Content */}
-              <div className="relative text-center z-10">
-                {/* Play button */}
-                <div className="relative inline-flex mb-6">
-                  <button className="play-btn w-20 h-20 rounded-full bg-white/15 border border-white/30 flex items-center justify-center backdrop-blur-sm">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                      <polygon points="5 3 19 12 5 21 5 3"/>
-                    </svg>
-                  </button>
-                  <div className="absolute inset-0 rounded-full border border-white/20 pulse-ring"></div>
-                </div>
-                
-                <div className="text-white/90 font-display text-xl font-semibold mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>
-                  Video Panduan Teknis Survei Klinis
-                </div>
-                <div className="text-white/50 text-sm">Klik untuk memutar · Durasi ~12 menit</div>
-              </div>
-            </div>
-
-            {/* Bottom info bar */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(10px)',padding:'16px 24px',display:'flex',alignItems:'center',gap:'12px'}}>
-              <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#f87171',flexShrink:0}}></div>
-              <span style={{color:'rgba(255,255,255,0.7)',fontSize:'0.8rem'}}>Panduan Survei Klinis Crezet 2026 · Daewoong Pharmaceutical Indonesia</span>
-              <div style={{marginLeft:'auto',color:'rgba(255,255,255,0.5)',fontSize:'0.8rem',fontFamily:'DM Mono,monospace'}}>12:34</div>
-            </div>
+          {/* Container Video Responsive */}
+          <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-gray-200" style={{ paddingTop: '56.25%' }}>
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              // GANTI URL DI BAWAH INI DENGAN LINK EMBED YOUTUBE KAMU
+              src="https://www.youtube.com/watch?v=gGdGFtwCNBE&list=RDgGdGFtwCNBE&start_radio=1"
+              title="Video Panduan Teknis"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
 
           {/* Video meta */}
-          <div className="mt-6 flex flex-wrap gap-4 justify-center">
+          <div className="mt-8 flex flex-wrap gap-4 justify-center">
             {[
               {icon:'📋',label:'Cara pengisian spreadsheet'},
               {icon:'🔐',label:'Enkripsi & keamanan data'},
