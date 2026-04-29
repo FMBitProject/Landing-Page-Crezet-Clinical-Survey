@@ -939,26 +939,51 @@ function FAQ() {
 
 /* ── Dose Reference Card ── */
 function DoseCard() {
+  // Array data dosis beserta nama file gambar yang Anda berikan
+  const doses = [
+    { label: '10/5 mg', img: 'Crezet 10_5 Green 2.jpeg', color: '#65a30d' }, // Warna aksen Hijau
+    { label: '10/10 mg', img: 'Crezet 10_10 Blue 2.jpeg', color: '#2563eb' }, // Warna aksen Biru
+    { label: '10/20 mg', img: 'Crezet 10_20 Orange 1.jpeg', color: '#ea580c' } // Warna aksen Oranye
+  ];
+
   return (
     <section className="py-16 bg-pharma-50">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="fade-in-up bg-gradient-to-r from-pharma-800 to-pharma-600 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
-          <div className="flex-1">
-            <h3 className="font-display text-3xl font-bold text-white mb-3" style={{fontFamily:'DM Sans,sans-serif'}}>
+        <div className="fade-in-up bg-gradient-to-r from-pharma-800 to-pharma-900 rounded-3xl p-8 md:p-12 flex flex-col lg:flex-row items-center gap-10 shadow-xl">
+          
+          {/* Teks di sebelah kiri */}
+          <div className="flex-1 text-center lg:text-left">
+            <h3 className="font-display text-3xl md:text-4xl font-bold text-white mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
               Dosis Crezet yang Terdokumentasi
             </h3>
-            <p className="text-white/70 text-sm leading-relaxed">
-              Hanya tiga varian dosis berikut yang valid untuk dicatat dalam survei klinis ini.
+            <p className="text-white/70 text-base leading-relaxed max-w-md mx-auto lg:mx-0">
+              Hanya tiga varian dosis berikut yang valid untuk dicatat dalam survei klinis ini. Pastikan Anda mencatat sesuai dengan kemasan yang diberikan kepada pasien.
             </p>
           </div>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {['10/5 mg', '10/10 mg', '10/20 mg'].map((dose, i) => (
-              <div key={i} className="bg-white/10 border border-white/20 rounded-2xl px-8 py-5 text-center backdrop-blur-sm">
-                <div className="font-mono font-bold text-white text-2xl" style={{fontFamily:'DM Mono,monospace'}}>{dose}</div>
-                <div className="text-white/50 text-xs mt-1">Ezetimibe/Rosuvastatin</div>
+          
+          {/* Kartu Gambar Obat di sebelah kanan */}
+          <div className="flex flex-wrap justify-center lg:justify-end gap-5">
+            {doses.map((d, i) => (
+              <div key={i} className="bg-white rounded-2xl p-5 text-center shadow-lg w-[140px] md:w-[170px] flex flex-col items-center relative overflow-hidden transition-transform hover:-translate-y-1">
+                {/* Garis warna aksen di atas kartu (sesuai warna dus) */}
+                <div className="absolute top-0 left-0 right-0 h-1.5" style={{backgroundColor: d.color}}></div>
+                
+                {/* Kontainer Gambar Obat */}
+                <div className="h-24 md:h-28 w-full flex items-center justify-center mb-4">
+                  <img 
+                    src={d.img} 
+                    alt={`Crezet ${d.label}`} 
+                    className="max-h-full max-w-full object-contain drop-shadow-sm"
+                  />
+                </div>
+                
+                {/* Teks Dosis */}
+                <div className="font-display font-bold text-pharma-900 text-xl md:text-2xl" style={{fontFamily:'DM Sans,sans-serif'}}>{d.label}</div>
+                <div className="text-gray-500 text-[10px] md:text-xs mt-1 uppercase tracking-wider font-semibold">Ezetimibe/Rosuvastatin</div>
               </div>
             ))}
           </div>
+          
         </div>
       </div>
     </section>
