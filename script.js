@@ -1015,21 +1015,7 @@ function Footer() {
                 </li>
               ))}
             </ul>
-            <p className="text-white/30 text-xs uppercase tracking-widest mb-2">Potensial Bergabung</p>
-            <ul className="space-y-1 text-white/30 text-xs max-h-32 overflow-y-auto pr-1" style={{scrollbarWidth:'thin',scrollbarColor:'rgba(255,255,255,0.1) transparent'}}>
-              {[
-                {code:'06',name:'Klinik Utama Medika'},{code:'07',name:'RS Siloam Kebon Jeruk'},
-                {code:'08',name:'Apotek Kimia Farma Sudirman'},{code:'09',name:'Klinik Prodia Fatmawati'},
-                {code:'10',name:'RS Premier Bintaro'},{code:'11',name:'Klinik Sehat Sentosa'},
-                {code:'12',name:'RS Pondok Indah'},{code:'13',name:'Apotek Guardian Kelapa Gading'},
-                {code:'14',name:'Klinik Medistra Jakarta'},{code:'15',name:'RS Mitra Keluarga Bekasi'},
-                {code:'16',name:'Klinik Penyakit Dalam Menteng'},
-              ].map(s => (
-                <li key={s.code} className="flex items-center gap-2">
-                  <span className="font-mono text-white/20">{s.code}</span> {s.name}
-                </li>
-              ))}
-            </ul>
+            {/* Bagian Potensial Bergabung sudah dihapus di sini */}
           </div>
 
           <div>
