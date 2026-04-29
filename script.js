@@ -1126,7 +1126,9 @@ function Documents() {
           <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
             Unduh Dokumen Referensi
           </h2>
-          <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
+          
+          {/* BAGIAN INI: Subtitle dibuat BLUR dan tidak bisa diblok */}
+          <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty', filter: 'blur(5px)', opacity: 0.5, userSelect: 'none', pointerEvents: 'none'}}>
             Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026.
           </p>
         </div>
@@ -1137,21 +1139,28 @@ function Documents() {
               <div className="h-1.5 w-full" style={{background:doc.color}}></div>
 
               <div className="p-7 flex flex-col flex-1">
-                {/* Header: Icon dan Tag */}
                 <div className="flex items-start justify-between mb-5">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{background:doc.bg, color:doc.color}}>
                     {doc.icon}
                   </div>
-                  <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
-                    style={{background:doc.bg, color:doc.color}}>
+                  
+                  {/* BAGIAN INI: Label "Panduan Utama", dsb ikut diblur jika belum di-unlock */}
+                  <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium transition-all"
+                    style={{
+                      background:doc.bg, 
+                      color:doc.color,
+                      filter: isUnlocked(doc.file) ? 'none' : 'blur(4px)',
+                      opacity: isUnlocked(doc.file) ? 1 : 0.4,
+                      userSelect: isUnlocked(doc.file) ? 'auto' : 'none'
+                    }}>
                     {doc.tag}
                   </span>
                 </div>
 
                 {isUnlocked(doc.file) ? (
                   <>
-                    {/* Tampilan Unlocked: Judul & Deskripsi Normal */}
+                    {/* Tampilan Unlocked: Semua Blur Hilang */}
                     <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
                       {doc.title}
                     </h3>
@@ -1174,7 +1183,7 @@ function Documents() {
                   </>
                 ) : (
                   <div className="flex-1 flex flex-col">
-                    {/* Tampilan Locked: Judul & Deskripsi di-BLUR BERSAMAAN */}
+                    {/* Tampilan Locked: Judul Utama & Deskripsi di dalam kotak diblur */}
                     <div className="flex-1 mb-6 relative select-none" style={{filter:'blur(6px)', opacity: 0.4, userSelect:'none', pointerEvents:'none'}}>
                       <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
                         {doc.title}
