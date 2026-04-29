@@ -593,7 +593,7 @@ function SurveyForm() {
   const [sessionId] = useState(() => 'DOC-' + Date.now());
 
   // GANTI URL INI DENGAN WEB APP URL DARI APPS SCRIPT!
-  const scriptURL = 'MASUKKAN_URL_WEB_APP_KAMU_DISINI';
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
 
   // Fungsi Submit Form 1 (Langsung masuk database)
   function submitKonfirmasi(e) {
