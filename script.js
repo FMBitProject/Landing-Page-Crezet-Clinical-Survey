@@ -1052,6 +1052,7 @@ function Documents() {
   function isUnlocked(file) {
     return unlockedDocs.has(file);
   }
+  
   const docs = [
     {
       title: 'Panduan Survei Klinis Crezet 2026',
@@ -1136,6 +1137,7 @@ function Documents() {
               <div className="h-1.5 w-full" style={{background:doc.color}}></div>
 
               <div className="p-7 flex flex-col flex-1">
+                {/* Header: Icon dan Tag */}
                 <div className="flex items-start justify-between mb-5">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{background:doc.bg, color:doc.color}}>
@@ -1149,7 +1151,7 @@ function Documents() {
 
                 {isUnlocked(doc.file) ? (
                   <>
-                    {/* Judul dan deskripsi tampil jelas jika sudah di-unlock */}
+                    {/* Tampilan Unlocked: Judul & Deskripsi Normal */}
                     <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
                       {doc.title}
                     </h3>
@@ -1172,17 +1174,17 @@ function Documents() {
                   </>
                 ) : (
                   <div className="flex-1 flex flex-col">
-                    {/* Judul dan deskripsi di-blur bersamaan dalam 1 container, dengan teks normal (tidak terlalu wide) */}
-                    <div className="flex-1 mb-6 relative select-none" style={{filter:'blur(5px)', userSelect:'none', pointerEvents:'none', opacity: 0.6}}>
+                    {/* Tampilan Locked: Judul & Deskripsi di-BLUR BERSAMAAN */}
+                    <div className="flex-1 mb-6 relative select-none" style={{filter:'blur(6px)', opacity: 0.4, userSelect:'none', pointerEvents:'none'}}>
                       <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
                         {doc.title}
                       </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
+                      <p className="text-gray-500 text-sm leading-relaxed">
                         {doc.desc}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-50">
+                    <div className="pt-4 border-t border-gray-50 mt-auto">
                       <button onClick={() => setModalDoc(doc)}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-md border-2"
                         style={{borderColor:doc.color+'40',color:doc.color,background:doc.bg}}>
