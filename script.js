@@ -114,8 +114,6 @@ function Hero() {
             Memastikan keseragaman, kelengkapan, dan akurasi data praktik klinis rutin untuk kualitas analisis survei terbaik.
           </p>
 
-
-
           {/* Stats bar */}
           <div className="fade-in-up delay-400 flex flex-wrap gap-x-8 gap-y-4">
             {[
@@ -660,42 +658,41 @@ function FAQ() {
 
         <div className="space-y-3">
           {faqs.map((faq, i) => (
-            <div key={i} className={`fade-in-up delay-${Math.min(i*100, 400)} border rounded-2xl overflow-hidden transition-all ${
-              openIdx === i ? 'border-pharma-300 shadow-sm' : 'border-gray-100 bg-white'
-            }`}>
-              <button
-                className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
-                onClick={() => setOpenIdx(openIdx === i ? null : i)}>
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <span className="flex-shrink-0 inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold"
-                    style={{background:'#e0ebff',color:'#1a3480'}}>
-                    {faq.tag}
-                  </span>
-                  <span className="font-display font-semibold text-pharma-900 text-base" style={{fontFamily:'DM Sans,sans-serif',textWrap:'pretty'}}>{faq.q}</span>
+            <div key={i} className={`fade-in-up delay-${Math.min(i*100, 400)}`}>
+              <div className={`border rounded-2xl overflow-hidden transition-all ${
+                openIdx === i ? 'border-pharma-300 shadow-sm' : 'border-gray-100 bg-white'
+              }`}>
+                <button
+                  className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                  onClick={() => setOpenIdx(openIdx === i ? null : i)}>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <span className="flex-shrink-0 inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                      style={{background:'#e0ebff',color:'#1a3480'}}>
+                      {faq.tag}
+                    </span>
+                    <span className="font-display font-semibold text-pharma-900 text-base" style={{fontFamily:'DM Sans,sans-serif',textWrap:'pretty'}}>{faq.q}</span>
+                  </div>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+                    openIdx === i ? 'bg-pharma-600 text-white' : 'bg-pharma-50 text-pharma-400'
+                  }`}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"
+                      style={{transform: openIdx === i ? 'rotate(180deg)' : 'rotate(0deg)', transition:'transform 0.3s ease'}}>
+                      <polyline points="2 4 7 9 12 4"/>
+                    </svg>
+                  </div>
+                </button>
+                
+                <div style={{
+                  maxHeight: openIdx === i ? '600px' : '0px',
+                  opacity: openIdx === i ? '1' : '0',
+                  overflow: 'hidden',
+                  transition: 'all 0.4s cubic-bezier(.22,1,.36,1)',
+                }}>
+                  <p className="px-6 pb-6 text-slate-700 text-sm leading-relaxed" style={{paddingLeft:'1.5rem'}}>
+                    {faq.a}
+                  </p>
                 </div>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-                  openIdx === i ? 'bg-pharma-600 text-white' : 'bg-pharma-50 text-pharma-400'
-                }`}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"
-                    style={{transform: openIdx === i ? 'rotate(180deg)' : 'rotate(0deg)', transition:'transform 0.3s ease'}}>
-                    <polyline points="2 4 7 9 12 4"/>
-                  </svg>
-                </div>
-              </button>
-              
-              {/* === INI BAGIAN YANG DIPERBAIKI === */}
-              <div style={{
-                maxHeight: openIdx === i ? '600px' : '0px',
-                opacity: openIdx === i ? '1' : '0',
-                overflow: 'hidden',
-                transition: 'all 0.4s cubic-bezier(.22,1,.36,1)',
-              }}>
-                <p className="px-6 pb-6 text-slate-700 text-sm leading-relaxed" style={{paddingLeft:'1.5rem'}}>
-                  {faq.a}
-                </p>
               </div>
-              {/* ================================== */}
-              
             </div>
           ))}
         </div>
