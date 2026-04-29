@@ -451,9 +451,9 @@ function Timeline() {
       items: ['Dokumentasi dosis Crezet aktual','Hasil lab LDL & HDL terbaru','Evaluasi CV Risk (ESC 2025)','Pencatatan efek samping (AE/SAE)','Nilai SGPT, SGOT, CK jika relevan','Kepatuhan penggunaan obat'],
     },
     {
-      week: 'Minggu ke-24',
+      week: 'Minggu ke-24 (±8 minggu)', // <--- Ditambahkan di sini
       label: 'Pengamatan Rutin II',
-      badge: 'Toleransi ±4 minggu',
+      badge: 'Toleransi ±8 minggu', // <--- Disesuaikan juga di badgenya
       color: '#7c3aed',
       items: ['Dokumentasi dosis Crezet akhir','Hasil lab LDL & HDL akhir survei','Evaluasi CV Risk (ESC 2025)','Laporan lengkap AE/SAE','Finalisasi data pasien','Verifikasi kelengkapan data'],
     },
@@ -537,7 +537,6 @@ function Timeline() {
     </section>
   );
 }
-
 /* ── Video Section ── */
 function VideoSection() {
   return (
@@ -591,19 +590,24 @@ function SurveyForm() {
   const [step, setStep] = useState(1); // 1 = Konfirmasi, 2 = MOU, 3 = Sukses Semua
   const [loading, setLoading] = useState(false);
   
+  // Membuat ID unik otomatis agar Form 1 dan Form 2 bisa dihubungkan di database
+  const [sessionId] = useState(() => 'DOC-' + Date.now());
+
   // GANTI URL INI DENGAN WEB APP URL DARI APPS SCRIPT!
   const scriptURL = 'MASUKKAN_URL_WEB_APP_KAMU_DISINI';
 
+  // Fungsi Submit Form 1 (Langsung masuk database)
   function submitKonfirmasi(e) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.target);
     formData.append("formType", "konfirmasi"); // Penanda Form 1
+    formData.append("sessionId", sessionId);   // Mengirim ID Unik
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
         setLoading(false);
-        setStep(2); // Lanjut ke Form 2
+        setStep(2); // Lanjut ke Form 2 setelah berhasil masuk database
         window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
       })
       .catch(error => {
@@ -613,11 +617,13 @@ function SurveyForm() {
       });
   }
 
+  // Fungsi Submit Form 2
   function submitMOU(e) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.target);
-    formData.append("formType", "mou"); // Penanda Form 2
+    formData.append("formType", "mou");      // Penanda Form 2
+    formData.append("sessionId", sessionId); // Mengirim ID Unik yang sama dengan Form 1
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
@@ -698,9 +704,9 @@ function SurveyForm() {
                   {loading ? (
                     <>
                       <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                      Menyimpan...
+                      Menyimpan Data Konfirmasi...
                     </>
-                  ) : 'Lanjut ke Form Kelengkapan MOU →'}
+                  ) : 'Simpan & Lanjut ke Form MOU →'}
                 </button>
               </form>
             </div>
@@ -716,7 +722,7 @@ function SurveyForm() {
                 Tahap 2 dari 2
               </span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Form Kelengkapan Data MOU</h2>
-              <p className="text-gray-500 text-lg">Konfirmasi awal berhasil. Mohon lengkapi data administratif berikut.</p>
+              <p className="text-gray-500 text-lg">Konfirmasi awal telah <b>tersimpan</b>. Mohon lengkapi data administratif berikut.</p>
             </div>
             
             <form onSubmit={submitMOU} className="space-y-8 bg-white p-8 md:p-10 rounded-3xl border border-gray-200 shadow-xl">
@@ -816,7 +822,7 @@ function SurveyForm() {
                   {loading ? (
                     <>
                       <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                      Menyimpan Data...
+                      Menyimpan Data MOU...
                     </>
                   ) : 'Kirim Seluruh Data MOU ✓'}
                 </button>
@@ -841,7 +847,6 @@ function SurveyForm() {
     </section>
   );
 }
-
 /* ── FAQ ── */
 function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
@@ -1172,9 +1177,10 @@ function Documents() {
                 ) : (
                   <div className="flex-1 flex flex-col">
                     {/* Blurred description placeholder */}
-                    <div className="flex-1 mb-6 relative">
-                      <div className="text-gray-400 text-sm leading-relaxed select-none" style={{filter:'blur(5px)',userSelect:'none',pointerEvents:'none'}}>
-                        {doc.desc}
+                    <div className="flex-1 mb-6 relative overflow-hidden">
+                      {/* Dibuat lebih blur dan teks diulang agar terlihat sebagai blok penuh */}
+                      <div className="text-gray-400 text-sm leading-relaxed select-none" style={{filter:'blur(6px)', userSelect:'none', pointerEvents:'none', opacity: 0.6}}>
+                        {doc.desc} {doc.desc} {doc.desc}
                       </div>
                     </div>
                     {/* Locked footer */}
@@ -1212,7 +1218,6 @@ function Documents() {
     </section>
   );
 }
-
 /* ── Footer ── */
 function Footer() {
   return (
