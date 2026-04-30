@@ -621,12 +621,23 @@ function SurveyForm({ onComplete, sessionPassword }) {
   function submitKonfirmasi(e) {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.target);
-    formData.append("formType", "konfirmasi");
-    formData.append("sessionId", sessionId);
-    formData.append("sessionPassword", sessionPassword);
     
-    fetch(scriptURL, { method: 'POST', body: formData })
+    const payload = {
+      formType: "konfirmasi",
+      sessionId: sessionId,
+      namaDokter: e.target.namaDokter.value,
+      tempatPraktek: e.target.tempatPraktek.value,
+      pahamPanduan: e.target.pahamPanduan.value,
+      pahamVideo: e.target.pahamVideo.value,
+      pertanyaan: e.target.pertanyaan.value,
+      sessionPassword: sessionPassword
+    };
+    
+    fetch(scriptURL, { 
+      method: 'POST', 
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(() => {
         setLoading(false);
         setStep(2);
@@ -642,20 +653,42 @@ function SurveyForm({ onComplete, sessionPassword }) {
   function submitMOU(e) {
     e.preventDefault();
     
-    // Validasi Q12: minimal 1 pilihan
     if (selectedDoses.length === 0) {
       alert('Mohon pilih ketersediaan Crezet di klinik Anda (pertanyaan no. 12)');
       return;
     }
     
     setLoading(true);
-    const formData = new FormData(e.target);
-    formData.append("formType", "mou");
-    formData.append("sessionId", sessionId);
-    formData.append("ketersediaan", selectedDoses.join(', '));
-    formData.append("sessionPassword", sessionPassword);
     
-    fetch(scriptURL, { method: 'POST', body: formData })
+    const payload = {
+      formType: "mou",
+      sessionId: sessionId,
+      legalKlinik: e.target.legalKlinik.value,
+      alamatKlinik: e.target.alamatKlinik.value,
+      namaMewakili: e.target.namaMewakili.value,
+      jabatanMewakili: e.target.jabatanMewakili.value,
+      nik: e.target.nik.value,
+      kepemilikan: e.target.kepemilikan.value,
+      jabatanDokter: e.target.jabatanDokter.value,
+      background: e.target.background.value,
+      alamatDokter: e.target.alamatDokter.value,
+      telpDokter: e.target.telpDokter.value,
+      emailDokter: e.target.emailDokter.value,
+      ketersediaan: selectedDoses.join(', '),
+      q13: e.target.q13.value,
+      q14: e.target.q14.value,
+      q15: e.target.q15.value,
+      q16: e.target.q16.value,
+      namaRPMRPS: e.target.namaRPMRPS.value,
+      q17: e.target.q17.value,
+      sessionPassword: sessionPassword
+    };
+    
+    fetch(scriptURL, { 
+      method: 'POST', 
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(() => {
         setLoading(false);
         setStep(3);
