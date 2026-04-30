@@ -937,49 +937,72 @@ function FAQ() {
   );
 }
 
-/* ── Dose Reference Card ── */
+/* ── Dose Reference Card (FIXED) ── */
 function DoseCard() {
-  // Array data dosis beserta nama file gambar yang Anda berikan
   const doses = [
-    { label: '10/5 mg', img: 'Crezet 10_5 Green 2.jpeg', color: '#65a30d' }, // Warna aksen Hijau
-    { label: '10/10 mg', img: 'Crezet 10_10 Blue 2.jpeg', color: '#2563eb' }, // Warna aksen Biru
-    { label: '10/20 mg', img: 'Crezet 10_20 Orange 1.jpeg', color: '#ea580c' } // Warna aksen Oranye
+    { label: '10/5 mg', img: 'Crezet 10_5 Green 2.jpeg', color: '#65a30d', bgTint: '#f0fdf4' },
+    { label: '10/10 mg', img: 'Crezet 10_10 Blue 2.jpeg', color: '#2563eb', bgTint: '#eff6ff' },
+    { label: '10/20 mg', img: 'Crezet 10_20 Orange 1.jpeg', color: '#ea580c', bgTint: '#fff7ed' }
   ];
 
   return (
-    <section className="py-24 bg-pharma-950">
+    <section className="py-16 bg-pharma-50">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {doses.map((d, i) => (
-            <div key={i} className={`fade-in-up delay-${(i+1)*100} bg-white rounded-[2rem] overflow-hidden flex flex-col items-center pb-12 shadow-xl transform transition-transform hover:-translate-y-2`}>
-              {/* Garis warna aksen di atas kartu yang mengikuti lengkungan border-radius */}
-              <div className="w-full h-4" style={{backgroundColor: d.color}}></div>
-              
-              {/* Kontainer Gambar Obat */}
-              <div className="h-56 md:h-64 w-full flex items-center justify-center p-8 mt-4">
-                <img 
-                  src={d.img} 
-                  alt={`Crezet ${d.label}`} 
-                  className="max-h-full max-w-full object-contain mix-blend-multiply"
-                />
-              </div>
-              
-              {/* Teks Dosis dan Kandungan */}
-              <div className="text-center px-4 mt-auto">
-                <div className="font-display font-bold text-pharma-900 text-4xl mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>
-                  {d.label}
+        <div className="fade-in-up bg-gradient-to-br from-pharma-800 to-pharma-950 rounded-3xl p-8 md:p-12 shadow-xl">
+          
+          {/* Heading di atas, full width */}
+          <div className="text-center mb-10 max-w-2xl mx-auto">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest mb-4"
+              style={{background:'rgba(45,212,191,0.15)', color:'#5eead4', border:'1px solid rgba(45,212,191,0.3)'}}>
+              Referensi Dosis
+            </span>
+            <h3 className="font-display text-3xl md:text-4xl font-bold text-white mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
+              Dosis Crezet yang Terdokumentasi
+            </h3>
+            <p className="text-white/70 text-base leading-relaxed">
+              Hanya tiga varian dosis berikut yang valid untuk dicatat dalam survei klinis ini. Pastikan Anda mencatat sesuai dengan kemasan yang diberikan kepada pasien.
+            </p>
+          </div>
+
+          {/* Grid Kartu Obat - Responsive 1/3 cols */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+            {doses.map((d, i) => (
+              <div key={i} 
+                className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col items-center transition-all hover:-translate-y-1 hover:shadow-2xl">
+                
+                {/* Garis warna aksen di atas kartu */}
+                <div className="w-full h-1.5" style={{backgroundColor: d.color}}></div>
+                
+                {/* Kontainer Gambar Obat - background tint sesuai warna varian */}
+                <div className="w-full py-6 px-4 flex items-center justify-center" 
+                  style={{background: d.bgTint, minHeight: '160px'}}>
+                  <img 
+                    src={d.img} 
+                    alt={`Crezet ${d.label}`} 
+                    className="max-h-32 w-auto object-contain drop-shadow-md"
+                  />
                 </div>
-                <div className="text-gray-500 text-xs md:text-sm font-bold tracking-widest uppercase">
-                  Ezetimibe/Rosuvastatin
+                
+                {/* Teks Dosis */}
+                <div className="w-full px-4 py-5 text-center border-t border-gray-100">
+                  <div className="font-display font-bold text-pharma-900 text-2xl md:text-3xl mb-1.5" 
+                    style={{fontFamily:'DM Sans,sans-serif'}}>
+                    {d.label}
+                  </div>
+                  <div className="text-gray-500 text-[10px] uppercase tracking-wider font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
+                    Ezetimibe/Rosuvastatin
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ── Password Modal ── */
 function PasswordModal({ doc, onClose, onSuccess }) {
