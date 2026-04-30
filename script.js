@@ -643,29 +643,32 @@ function VideoSection() {
   );
 }
 
-/* ── Multi-Step Form (Konfirmasi & MOU) ── */
-function SurveyForm() {
-  const [step, setStep] = useState(1); // 1 = Konfirmasi, 2 = MOU, 3 = Sukses Semua
+
+/* ── SurveyForm (UPDATED) ── 
+   Sekarang menerima prop `onComplete` untuk notify parent ketika selesai
+*/
+function SurveyForm({ onComplete }) {
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   
-  // Membuat ID unik otomatis agar Form 1 dan Form 2 bisa dihubungkan di database
   const [sessionId] = useState(() => 'DOC-' + Date.now());
-
-  // GANTI URL INI DENGAN WEB APP URL DARI APPS SCRIPT!
   const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
+  
+  // Password yang akan di-reveal setelah form selesai
+  const DOC_PASSWORD = 'clinical123';
 
-  // Fungsi Submit Form 1 (Langsung masuk database)
   function submitKonfirmasi(e) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.target);
-    formData.append("formType", "konfirmasi"); // Penanda Form 1
-    formData.append("sessionId", sessionId);   // Mengirim ID Unik
+    formData.append("formType", "konfirmasi");
+    formData.append("sessionId", sessionId);
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
         setLoading(false);
-        setStep(2); // Lanjut ke Form 2 setelah berhasil masuk database
+        setStep(2);
         window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
       })
       .catch(error => {
@@ -675,18 +678,19 @@ function SurveyForm() {
       });
   }
 
-  // Fungsi Submit Form 2
   function submitMOU(e) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.target);
-    formData.append("formType", "mou");      // Penanda Form 2
-    formData.append("sessionId", sessionId); // Mengirim ID Unik yang sama dengan Form 1
+    formData.append("formType", "mou");
+    formData.append("sessionId", sessionId);
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
         setLoading(false);
-        setStep(3); // Menuju halaman sukses
+        setStep(3);
+        // Notify parent component bahwa form sudah selesai
+        if (onComplete) onComplete();
         window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
       })
       .catch(error => {
@@ -694,6 +698,20 @@ function SurveyForm() {
         setLoading(false);
         alert('Terjadi kesalahan. Silakan coba lagi.');
       });
+  }
+
+  function copyPassword() {
+    navigator.clipboard.writeText(DOC_PASSWORD).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  }
+
+  function scrollToDocuments() {
+    const el = document.getElementById('documents');
+    if (el) {
+      window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }
   }
 
   return (
@@ -785,7 +803,6 @@ function SurveyForm() {
             
             <form onSubmit={submitMOU} className="space-y-8 bg-white p-8 md:p-10 rounded-3xl border border-gray-200 shadow-xl">
               
-              {/* Bagian 1: Data Klinik */}
               <div>
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">1. Informasi Legal Klinik/RS</h3>
                 <div className="grid md:grid-cols-2 gap-5">
@@ -816,7 +833,6 @@ function SurveyForm() {
                 </div>
               </div>
 
-              {/* Bagian 2: Data Dokter */}
               <div>
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">2. Data Dokter Penanggung Jawab</h3>
                 <div className="grid md:grid-cols-2 gap-5">
@@ -843,7 +859,6 @@ function SurveyForm() {
                 </div>
               </div>
 
-              {/* Bagian 3: Survey Tambahan */}
               <div>
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">3. Kuesioner Kelayakan</h3>
                 <div className="space-y-4">
@@ -889,14 +904,218 @@ function SurveyForm() {
           </div>
         )}
 
-        {/* === STEP 3: SUKSES === */}
+        {/* ════════════════════════════════════════════════════════
+            STEP 3: SUKSES — REDESIGNED dengan:
+            - Confidentiality statement profesional
+            - Password reveal box dengan copy-to-clipboard
+            - CTA scroll ke Documents section
+            ════════════════════════════════════════════════════════ */}
         {step === 3 && (
-          <div className="animate-fade-in text-center py-12">
-            <div className="w-20 h-20 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <div className="animate-fade-in">
+            
+            {/* Success Hero */}
+            <div className="text-center mb-10">
+              <div className="w-20 h-20 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-3" style={{fontFamily:'DM Sans,sans-serif'}}>
+                Pendaftaran Berhasil Dikonfirmasi
+              </h2>
+              <p className="text-gray-600 text-lg max-w-xl mx-auto">
+                Terima kasih atas partisipasi Anda. Kedua tahap pendaftaran telah berhasil terekam dalam sistem kami.
+              </p>
+              <div className="mt-4 inline-flex items-center gap-2 text-xs text-gray-400 font-mono bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+                ID Sesi: <span className="text-pharma-700 font-semibold">{sessionId}</span>
+              </div>
             </div>
-            <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Data Berhasil Disimpan!</h2>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">Terima kasih. Form Konfirmasi Panduan dan Kelengkapan Data MOU Anda telah terekam di dalam sistem kami.</p>
+
+            {/* ═══════════════════════════════════════════════════
+                PERNYATAAN KERAHASIAAN DATA — PROFESSIONAL
+                Mengikuti gaya pernyataan studi klinis seperti
+                Framingham, UK Biobank, ICH-GCP standards
+                ═══════════════════════════════════════════════════ */}
+            <div className="mb-8 bg-gradient-to-br from-pharma-50 to-white rounded-3xl border-2 border-pharma-100 overflow-hidden shadow-sm">
+              {/* Header */}
+              <div className="px-7 py-5 border-b border-pharma-100 flex items-start gap-4"
+                style={{background:'linear-gradient(135deg, rgba(26,52,128,0.04), rgba(45,212,191,0.04))'}}>
+                <div className="w-11 h-11 rounded-xl bg-pharma-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-display font-bold text-pharma-900 text-lg mb-0.5" style={{fontFamily:'DM Sans,sans-serif'}}>
+                    Pernyataan Kerahasiaan Data
+                  </h3>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">
+                    Data Confidentiality & Privacy Notice
+                  </p>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="px-7 py-6 space-y-4 text-sm text-gray-700 leading-relaxed" style={{textWrap:'pretty'}}>
+                <p>
+                  Seluruh informasi pribadi, data administratif, dan respons kuesioner yang Anda sampaikan melalui formulir ini bersifat <strong className="text-pharma-900">strictly confidential</strong> dan akan diperlakukan sesuai dengan prinsip-prinsip etika riset klinis (<em>Good Clinical Practice — ICH-GCP E6 R2</em>) serta peraturan perundang-undangan yang berlaku di Republik Indonesia, termasuk Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-4 my-5">
+                  {[
+                    {
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      ),
+                      title: 'Penyimpanan Aman',
+                      desc: 'Data disimpan dalam sistem terenkripsi dengan akses terbatas pada tim peneliti yang berwenang.'
+                    },
+                    {
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                      ),
+                      title: 'Penggunaan Terbatas',
+                      desc: 'Digunakan eksklusif untuk keperluan Survei Klinis Crezet 2026 dan tujuan ilmiah terkait.'
+                    },
+                    {
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                      ),
+                      title: 'Anonimisasi',
+                      desc: 'Identitas pribadi dipisahkan dari data analitik melalui sistem kode pseudonim.'
+                    },
+                    {
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                        </svg>
+                      ),
+                      title: 'Tanpa Pihak Ketiga',
+                      desc: 'Tidak akan dibagikan, dijual, atau dialihkan ke pihak ketiga komersial dalam bentuk apa pun.'
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3 bg-white rounded-xl p-4 border border-gray-100">
+                      <div className="w-9 h-9 rounded-lg bg-pharma-50 text-pharma-600 flex items-center justify-center flex-shrink-0">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-pharma-900 text-sm mb-1" style={{fontFamily:'DM Sans,sans-serif'}}>{item.title}</div>
+                        <div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <p>
+                  Hasil agregat dari survei dapat dipublikasikan dalam jurnal ilmiah, presentasi konferensi, atau laporan internal Daewoong Pharmaceutical Indonesia, namun <strong className="text-pharma-900">identitas individu peserta tidak akan pernah dipublikasikan</strong> dan tidak dapat ditelusuri kembali ke responden tertentu. Anda berhak meminta penghapusan data Anda dari sistem kami sewaktu-waktu dengan menghubungi tim Medical Affairs.
+                </p>
+
+                <div className="flex items-start gap-2 mt-4 pt-4 border-t border-pharma-100 text-xs text-gray-500">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span>
+                    Pernyataan ini sejalan dengan <em>Declaration of Helsinki (2013)</em>, prinsip <em>ICH-GCP E6 (R2)</em>, serta SOP Pengelolaan Data Klinis Daewoong Pharmaceutical Indonesia.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════
+                PASSWORD REVEAL BOX
+                ═══════════════════════════════════════════════════ */}
+            <div className="mb-8 rounded-3xl overflow-hidden shadow-xl"
+              style={{background:'linear-gradient(135deg, #1a3480 0%, #111d45 100%)'}}>
+              
+              {/* Decorative top accent */}
+              <div className="h-1.5 w-full" style={{background:'linear-gradient(90deg, #2dd4bf, #93b9ff, #2dd4bf)'}}></div>
+              
+              <div className="p-7 md:p-9 relative overflow-hidden">
+                {/* Decorative orb */}
+                <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20 pointer-events-none"
+                  style={{background:'radial-gradient(circle, #2dd4bf 0%, transparent 70%)', transform:'translate(30%, -40%)'}}></div>
+
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                      style={{background:'rgba(45,212,191,0.15)', border:'1px solid rgba(45,212,191,0.3)'}}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-1"
+                        style={{background:'rgba(45,212,191,0.2)', color:'#5eead4'}}>
+                        Akses Diberikan
+                      </span>
+                      <h3 className="font-display font-bold text-white text-xl" style={{fontFamily:'DM Sans,sans-serif'}}>
+                        Password Akses Dokumen
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-white/70 text-sm leading-relaxed mb-5">
+                    Sebagai apresiasi atas partisipasi Anda, berikut adalah password untuk mengunduh seluruh dokumen referensi survei klinis. Mohon simpan password ini dengan baik dan tidak dibagikan kepada pihak yang tidak berwenang.
+                  </p>
+
+                  {/* Password Display */}
+                  <div className="bg-white/5 backdrop-blur rounded-2xl p-5 border border-white/10 mb-5">
+                    <div className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Password</div>
+                    <div className="flex items-center gap-3">
+                      <code className="flex-1 font-mono text-2xl md:text-3xl font-bold text-white tracking-wider"
+                        style={{fontFamily:'DM Mono,monospace', letterSpacing:'0.1em'}}>
+                        {DOC_PASSWORD}
+                      </code>
+                      <button onClick={copyPassword}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95"
+                        style={{
+                          background: copied ? 'rgba(45,212,191,0.2)' : 'rgba(255,255,255,0.1)',
+                          color: copied ? '#5eead4' : 'white',
+                          border: `1px solid ${copied ? 'rgba(45,212,191,0.4)' : 'rgba(255,255,255,0.2)'}`
+                        }}>
+                        {copied ? (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Tersalin
+                          </>
+                        ) : (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            Salin
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <button onClick={scrollToDocuments}
+                    className="w-full py-4 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.99]"
+                    style={{
+                      background:'linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%)',
+                      color:'#042f2e'
+                    }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Akses Dokumen Referensi
+                  </button>
+
+                  <div className="flex items-center justify-center gap-2 mt-4 text-xs text-white/40">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Password berlaku hanya untuk sesi ini · Konfidensial
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
@@ -905,6 +1124,7 @@ function SurveyForm() {
     </section>
   );
 }
+
 /* ── FAQ ── */
 function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
@@ -1137,197 +1357,244 @@ function PasswordModal({ doc, onClose, onSuccess }) {
   );
 }
 
-/* ── Documents Download Section ── */
-function Documents() {
-  const [modalDoc, setModalDoc] = useState(null);
-  const [unlockedDocs, setUnlockedDocs] = useState(new Set());
-
-  function handleUnlock(doc) {
-    setUnlockedDocs(prev => new Set([...prev, doc.file]));
-    const a = document.createElement('a');
-    a.href = doc.file;
-    a.download = doc.title + '.pdf';
-    a.click();
-  }
-
-  function isUnlocked(file) {
-    return unlockedDocs.has(file);
-  }
+/* ══════════════════════════════════════════════════════════════════
+   Documents (UPDATED)
+   Sekarang menerima prop `formCompleted`
+   Jika false → tampilkan locked state dengan pesan "Selesaikan form"
+   Jika true  → tampilkan kartu dokumen normal (dengan password gate)
+   ══════════════════════════════════════════════════════════════════ */
+   function Documents({ formCompleted }) {
+    const [modalDoc, setModalDoc] = useState(null);
+    const [unlockedDocs, setUnlockedDocs] = useState(new Set());
   
-  const docs = [
-    {
-      title: 'Panduan Survei Klinis Crezet 2026',
-      desc: 'Dokumen panduan lengkap pelaksanaan survei klinis Crezet 2026 oleh Daewoong Pharmaceutical Indonesia.',
-      file: 'Panduan Survei Klinis Crezet 2026 (Daewoong Pharmaceutical Indonesia) (2).pdf',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-        </svg>
-      ),
-      color: '#1a3480',
-      bg: '#e0ebff',
-      size: 'PDF',
-      tag: 'Panduan Utama',
-    },
-    {
-      title: 'Panduan CV Risk Kalkulator',
-      desc: 'Panduan penggunaan kalkulator risiko kardiovaskular untuk penilaian klinis pasien dislipidemia.',
-      file: 'Panduan CV risk kalkulator.pdf',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-        </svg>
-      ),
-      color: '#3b6fe8',
-      bg: '#e0ebff',
-      size: '2.4 MB',
-      tag: 'Kalkulasi Risiko',
-    },
-    {
-      title: 'Panduan Pelaporan AE / SAE',
-      desc: 'Prosedur lengkap pelaporan Adverse Event dan Serious Adverse Event sesuai standar survei klinis.',
-      file: 'Panduan_Pelaporan_AE_SAE (1).pdf',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-        </svg>
-      ),
-      color: '#dc2626',
-      bg: '#fef2f2',
-      size: '1.8 MB',
-      tag: 'Keamanan & Pelaporan',
-    },
-    {
-      title: 'Troubleshooting Guide',
-      desc: 'Panduan pemecahan masalah teknis seputar pengisian data, spreadsheet, dan sistem entri survei.',
-      file: 'Troubleshooting Guide.pdf',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-        </svg>
-      ),
-      color: '#0d9488',
-      bg: '#ccfbf1',
-      size: '3.1 MB',
-      tag: 'Teknis & Operasional',
-    },
-  ];
-
-  return (
-    <section id="documents" className="py-24 bg-pharma-50">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="fade-in-up mb-14">
-          <span className="badge text-pharma-500 mb-4 block">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-            </svg>
-            Dokumen Panduan
-          </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
-            Unduh Dokumen Referensi
-          </h2>
-          
-          {/* BAGIAN INI: Subtitle dibuat BLUR dan tidak bisa diblok */}
-          <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty', filter: 'blur(5px)', opacity: 0.5, userSelect: 'none', pointerEvents: 'none'}}>
-            Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {docs.map((doc, i) => (
-            <div key={i} className={`fade-in-up delay-${(i+1)*100} card-hover bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col`}>
-              <div className="h-1.5 w-full" style={{background:doc.color}}></div>
-
-              <div className="p-7 flex flex-col flex-1">
-                <div className="flex items-start justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{background:doc.bg, color:doc.color}}>
-                    {doc.icon}
-                  </div>
-                  
-                  {/* BAGIAN INI: Label "Panduan Utama", dsb ikut diblur jika belum di-unlock */}
-                  <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium transition-all"
-                    style={{
-                      background:doc.bg, 
-                      color:doc.color,
-                      filter: isUnlocked(doc.file) ? 'none' : 'blur(4px)',
-                      opacity: isUnlocked(doc.file) ? 1 : 0.4,
-                      userSelect: isUnlocked(doc.file) ? 'auto' : 'none'
-                    }}>
-                    {doc.tag}
-                  </span>
-                </div>
-
-                {isUnlocked(doc.file) ? (
-                  <>
-                    {/* Tampilan Unlocked: Semua Blur Hilang */}
-                    <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
-                      {doc.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">{doc.desc}</p>
-                    
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                      <div className="flex items-center gap-1.5 text-gray-400 text-xs">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        <span className="font-mono">PDF · {doc.size}</span>
-                      </div>
-                      <button onClick={() => handleUnlock(doc)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:shadow-md active:scale-95"
-                        style={{background:doc.color, color:'white'}}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        Unduh
-                      </button>
+    function handleUnlock(doc) {
+      setUnlockedDocs(prev => new Set([...prev, doc.file]));
+      const a = document.createElement('a');
+      a.href = doc.file;
+      a.download = doc.title + '.pdf';
+      a.click();
+    }
+  
+    function isUnlocked(file) {
+      return unlockedDocs.has(file);
+    }
+  
+    function scrollToForm() {
+      const el = document.getElementById('form');
+      if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }
+    
+    const docs = [
+      {
+        title: 'Panduan Survei Klinis Crezet 2026',
+        desc: 'Dokumen panduan lengkap pelaksanaan survei klinis Crezet 2026 oleh Daewoong Pharmaceutical Indonesia.',
+        file: 'Panduan Survei Klinis Crezet 2026 (Daewoong Pharmaceutical Indonesia) (2).pdf',
+        icon: (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>),
+        color: '#1a3480', bg: '#e0ebff', size: 'PDF', tag: 'Panduan Utama',
+      },
+      {
+        title: 'Panduan CV Risk Kalkulator',
+        desc: 'Panduan penggunaan kalkulator risiko kardiovaskular untuk penilaian klinis pasien dislipidemia.',
+        file: 'Panduan CV risk kalkulator.pdf',
+        icon: (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>),
+        color: '#3b6fe8', bg: '#e0ebff', size: '2.4 MB', tag: 'Kalkulasi Risiko',
+      },
+      {
+        title: 'Panduan Pelaporan AE / SAE',
+        desc: 'Prosedur lengkap pelaporan Adverse Event dan Serious Adverse Event sesuai standar survei klinis.',
+        file: 'Panduan_Pelaporan_AE_SAE (1).pdf',
+        icon: (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>),
+        color: '#dc2626', bg: '#fef2f2', size: '1.8 MB', tag: 'Keamanan & Pelaporan',
+      },
+      {
+        title: 'Troubleshooting Guide',
+        desc: 'Panduan pemecahan masalah teknis seputar pengisian data, spreadsheet, dan sistem entri survei.',
+        file: 'Troubleshooting Guide.pdf',
+        icon: (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>),
+        color: '#0d9488', bg: '#ccfbf1', size: '3.1 MB', tag: 'Teknis & Operasional',
+      },
+    ];
+  
+    // ═══════════════════════════════════════════════════
+    // STATE 1: FORM BELUM SELESAI → Locked overlay state
+    // ═══════════════════════════════════════════════════
+    if (!formCompleted) {
+      return (
+        <section id="documents" className="py-24 bg-pharma-50">
+          <div className="max-w-3xl mx-auto px-6 text-center">
+            <div className="fade-in-up">
+              {/* Lock Icon */}
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-md"
+                style={{background:'linear-gradient(135deg, #1a3480, #111d45)'}}>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#93b9ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+  
+              <span className="badge text-pharma-500 mb-4 inline-flex items-center gap-2 justify-center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Dokumen Referensi
+              </span>
+              
+              <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
+                Akses Terkunci
+              </h2>
+              
+              <p className="text-gray-600 text-lg mb-2 max-w-xl mx-auto leading-relaxed" style={{textWrap:'pretty'}}>
+                Untuk menjaga integritas survei dan kerahasiaan data, dokumen referensi hanya dapat diakses setelah pendaftaran selesai.
+              </p>
+              <p className="text-gray-500 text-sm mb-8 max-w-xl mx-auto">
+                Silakan lengkapi <strong className="text-pharma-700">Form Konfirmasi Panduan</strong> dan <strong className="text-pharma-700">Form Kelengkapan Data MOU</strong> untuk mendapatkan akses.
+              </p>
+  
+              {/* Steps progress indicator */}
+              <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
+                {[
+                  {num: 1, label: 'Form Konfirmasi Panduan'},
+                  {num: 2, label: 'Form Kelengkapan MOU'},
+                  {num: 3, label: 'Akses Dokumen'},
+                ].map((step, i, arr) => (
+                  <React.Fragment key={i}>
+                    <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-gray-200 shadow-sm">
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                        i === 2 ? 'bg-gray-200 text-gray-400' : 'bg-pharma-100 text-pharma-700'
+                      }`}>{step.num}</span>
+                      <span className={`text-sm font-medium ${i === 2 ? 'text-gray-400' : 'text-pharma-800'}`}>{step.label}</span>
                     </div>
-                  </>
-                ) : (
-                  <div className="flex-1 flex flex-col">
-                    {/* Tampilan Locked: Judul Utama & Deskripsi di dalam kotak diblur */}
-                    <div className="flex-1 mb-6 relative select-none" style={{filter:'blur(6px)', opacity: 0.4, userSelect:'none', pointerEvents:'none'}}>
+                    {i < arr.length - 1 && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" className="hidden sm:block"><polyline points="9 18 15 12 9 6"/></svg>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+  
+              <button onClick={scrollToForm}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95"
+                style={{background:'linear-gradient(135deg, #2550cc, #1a3480)'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+                Mulai Pendaftaran Sekarang
+              </button>
+  
+              {/* Preview blurred document cards */}
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto opacity-40 pointer-events-none select-none">
+                {docs.map((doc, i) => (
+                  <div key={i} className="bg-white rounded-xl border border-gray-200 p-4 text-left" style={{filter:'blur(2px)'}}>
+                    <div className="w-10 h-10 rounded-lg mb-3" style={{background: doc.bg}}></div>
+                    <div className="h-3 bg-gray-200 rounded mb-2 w-3/4"></div>
+                    <div className="h-2 bg-gray-100 rounded w-full mb-1"></div>
+                    <div className="h-2 bg-gray-100 rounded w-2/3"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+  
+    // ═══════════════════════════════════════════════════
+    // STATE 2: FORM SUDAH SELESAI → Tampilkan kartu dokumen normal
+    // ═══════════════════════════════════════════════════
+    return (
+      <section id="documents" className="py-24 bg-pharma-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="fade-in-up mb-14">
+            <span className="badge text-pharma-500 mb-4 block">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Dokumen Panduan
+            </span>
+            <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>
+              Unduh Dokumen Referensi
+            </h2>
+            <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
+              Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026. Gunakan password yang telah diberikan untuk membuka setiap dokumen.
+            </p>
+          </div>
+  
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {docs.map((doc, i) => (
+              <div key={i} className={`fade-in-up delay-${(i+1)*100} card-hover bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col`}>
+                <div className="h-1.5 w-full" style={{background:doc.color}}></div>
+  
+                <div className="p-7 flex flex-col flex-1">
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{background:doc.bg, color:doc.color}}>
+                      {doc.icon}
+                    </div>
+                    <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
+                      style={{background:doc.bg, color:doc.color}}>
+                      {doc.tag}
+                    </span>
+                  </div>
+  
+                  {isUnlocked(doc.file) ? (
+                    <>
                       <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
                         {doc.title}
                       </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed">
-                        {doc.desc}
-                      </p>
+                      <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">{doc.desc}</p>
+                      
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                        <div className="flex items-center gap-1.5 text-gray-400 text-xs">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          <span className="font-mono">PDF · {doc.size}</span>
+                        </div>
+                        <button onClick={() => handleUnlock(doc)}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:shadow-md active:scale-95"
+                          style={{background:doc.color, color:'white'}}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                          </svg>
+                          Unduh
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="font-display font-semibold text-pharma-900 text-lg mb-2 leading-snug" style={{fontFamily:'DM Sans,sans-serif'}}>
+                        {doc.title}
+                      </h3>
+                      <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-6">{doc.desc}</p>
+  
+                      <div className="pt-4 border-t border-gray-50 mt-auto">
+                        <button onClick={() => setModalDoc(doc)}
+                          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-md border-2"
+                          style={{borderColor:doc.color+'40',color:doc.color,background:doc.bg}}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                          Masukkan Password
+                        </button>
+                      </div>
                     </div>
-
-                    <div className="pt-4 border-t border-gray-50 mt-auto">
-                      <button onClick={() => setModalDoc(doc)}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-md border-2"
-                        style={{borderColor:doc.color+'40',color:doc.color,background:doc.bg}}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                        Masukkan Password
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+  
+          <div className="fade-in-up mt-8 flex items-center justify-center gap-4 text-sm text-gray-400">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Dokumen bersifat <span className="font-medium text-pharma-500">konfidensial</span> — dilindungi password untuk penggunaan internal tim survei klinis.
+          </div>
         </div>
-
-        <div className="fade-in-up mt-8 flex items-center justify-center gap-4 text-sm text-gray-400">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Dokumen bersifat <span className="font-medium text-pharma-500">konfidensial</span> — dilindungi password untuk penggunaan internal tim survei klinis.
-        </div>
-      </div>
-
-      {modalDoc && (
-        <PasswordModal
-          doc={modalDoc}
-          onClose={() => setModalDoc(null)}
-          onSuccess={handleUnlock}
-        />
-      )}
-    </section>
-  );
-}
-/* ── Footer ── */
+  
+        {modalDoc && (
+          <PasswordModal
+            doc={modalDoc}
+            onClose={() => setModalDoc(null)}
+            onSuccess={handleUnlock}
+          />
+        )}
+      </section>
+    );
+  }
+  /* ── Footer ── */
 function Footer() {
   return (
     <footer className="bg-pharma-950 text-white pt-16 pb-8">
@@ -1391,25 +1658,39 @@ function Footer() {
   );
 }
 
-/* ── App ── */
-function App() {
-  useScrollReveal();
-
-  return (
-    <div>
-      <Navbar />
-      <Hero />
-      <DataIntegrity />
-      <Eligibility />
-      <Timeline />
-      <VideoSection />
-      <DoseCard />
-      <Documents />
-      <SurveyForm /> {/* FORM ADA DI SINI */}
-      <FAQ />
-      <Footer />
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+/* ══════════════════════════════════════════════════════════════════
+   App (UPDATED)
+   - State formCompleted di-lift ke level App
+   - Order: Form muncul SEBELUM Documents
+   - Documents menerima prop formCompleted
+   - SurveyForm menerima callback onComplete
+   ══════════════════════════════════════════════════════════════════ */
+   function App() {
+    useScrollReveal();
+    
+    // State global: apakah form sudah diselesaikan?
+    const [formCompleted, setFormCompleted] = useState(false);
+  
+    return (
+      <div>
+        <Navbar />
+        <Hero />
+        <DataIntegrity />
+        <Eligibility />
+        <Timeline />
+        <VideoSection />
+        <DoseCard />
+        
+        {/* FORM MUNCUL DULU */}
+        <SurveyForm onComplete={() => setFormCompleted(true)} />
+        
+        {/* DOCUMENTS MUNCUL SETELAH FORM, TERKUNCI SAMPAI FORM SELESAI */}
+        <Documents formCompleted={formCompleted} />
+        
+        <FAQ />
+        <Footer />
+      </div>
+    );
+  }
+  
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />)
