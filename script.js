@@ -635,8 +635,9 @@ function SurveyForm({ onComplete, sessionPassword }) {
     
     fetch(scriptURL, { 
       method: 'POST', 
+      mode: 'no-cors',
       body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
     })
       .then(() => {
         setLoading(false);
@@ -679,15 +680,16 @@ function SurveyForm({ onComplete, sessionPassword }) {
       q14: e.target.q14.value,
       q15: e.target.q15.value,
       q16: e.target.q16.value,
-      namaRPMRPS: e.target.namaRPMRPS.value,
+      namaRPMRPS: e.target.namaRPMRPS ? e.target.namaRPMRPS.value : '',
       q17: e.target.q17.value,
       sessionPassword: sessionPassword
     };
     
     fetch(scriptURL, { 
       method: 'POST', 
+      mode: 'no-cors',
       body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
     })
       .then(() => {
         setLoading(false);
