@@ -40,13 +40,17 @@ function Navbar() {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'nav-blur shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
       <div className="flex items-center">
-          <img
-            src="logo_1.png" // <-- Ganti dengan nama file gambar Anda
-            alt="Daewoong Indonesia"
-            className={`h-9 w-auto object-contain transition-all duration-300 ${!scrolled ? 'bg-white/90 px-3 py-1.5 rounded-lg shadow-sm' : ''}`}
-            style={{filter: 'none'}}
-          />
-        </div>
+  <img
+    src="logo_1.png"
+    alt="Daewoong Indonesia"
+    className="h-9 w-auto object-contain transition-all duration-500"
+    style={{
+      filter: scrolled 
+        ? 'none' 
+        : 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
+    }}
+  />
+</div>
 
         <div className="hidden md:flex items-center gap-1">
           {links.map(l => (
@@ -1513,14 +1517,16 @@ function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-5">
-              <img
-                src="logo_1.png" // <-- Ganti dengan nama file gambar Anda
-                alt="Daewoong Indonesia"
-                className="h-10 w-auto object-contain bg-white/95 px-4 py-2 rounded-xl shadow-sm"
-                style={{filter: 'none'}}
-              />
-            </div>
+          <div className="flex items-center gap-3 mb-5">
+  <img
+    src="logo_1.png"
+    alt="Daewoong Indonesia"
+    className="h-10 w-auto object-contain"
+    style={{
+      filter: 'brightness(0) invert(1) opacity(0.95)',
+    }}
+  />
+</div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-md">
               Panduan resmi survei klinis penggunaan Crezet dalam praktik klinis rutin di Indonesia tahun 2026, dilakukan dengan standar Good Clinical Practice (ICH-GCP E6 R2).
             </p>
