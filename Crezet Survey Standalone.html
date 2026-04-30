@@ -545,17 +545,17 @@ function Eligibility() {
             {title:'Alergi & Hipersensitivitas',icon:'⚠️',color:'#b45309',bg:'#fffbeb',border:'#fde68a',desc:'Hipersensitivitas terhadap rosuvastatin, ezetimibe, atau komponen tablet Crezet lainnya.'},
             {title:'Miopati',icon:'💪',color:'#0369a1',bg:'#eff6ff',border:'#bfdbfe',desc:'Miopati aktif atau riwayat miopati yang diinduksi statin sebelumnya.'},
             {title:'Partisipasi Studi Lain',icon:'📋',color:'#065f46',bg:'#f0fdf4',border:'#bbf7d0',desc:'Pasien yang saat ini berpartisipasi dalam survei atau studi obat/intervensi lainnya secara bersamaan.'},
-            {title:'Diskresi Dokter',icon:'🩺',color:'#6b7280',bg:'#f9fafb',border:'#e5e7eb',desc:'Setiap kondisi lain yang membuat pasien tidak layak mengikuti survei menurut penilaian dokter penanggung jawab.'},
+            {title:'Diskresi Dokter',icon:'🩺',color:'#92400e',bg:'#FFFBEB',border:'#F59E0B',bold:true,desc:'Setiap kondisi lain yang membuat pasien tidak layak mengikuti survei menurut penilaian dokter penanggung jawab.'},
           ].map((item, i) => (
             <div key={i} className="rounded-xl p-6 border" style={{background:item.bg,borderColor:item.border}}>
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-xl">{item.icon}</span>
-                <h4 className="font-display font-semibold text-sm" style={{fontFamily:'DM Sans,sans-serif',color:item.color}}>{item.title}</h4>
+                <h4 className="font-display text-sm" style={{fontFamily:'DM Sans,sans-serif',color:item.color,fontWeight:item.bold?'700':'600'}}>{item.title}</h4>
                 <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center" style={{background:item.color+'22'}}>
                   <svg width="10" height="10" viewBox="0 0 10 10" fill={item.color}><line x1="2" y1="5" x2="8" y2="5" stroke={item.color} strokeWidth="1.5"/></svg>
                 </span>
               </div>
-              <p className="text-sm leading-relaxed" style={{color:item.color+'bb'}}>{item.desc}</p>
+              <p className="text-sm leading-relaxed" style={{color:item.bold?item.color:item.color+'bb'}}>{item.desc}</p>
             </div>
           ))}
         </div>
