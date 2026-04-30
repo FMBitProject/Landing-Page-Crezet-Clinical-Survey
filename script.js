@@ -39,11 +39,11 @@ function Navbar() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'nav-blur shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center">
+      <div className="flex items-center">
           <img
-            src="Daewoong Header for questionaire.png"
+            src="logo_1.png" // <-- Ganti dengan nama file gambar Anda
             alt="Daewoong Indonesia"
-            className="h-9 w-auto object-contain"
+            className={`h-9 w-auto object-contain transition-all duration-300 ${!scrolled ? 'bg-white/90 px-3 py-1.5 rounded-lg shadow-sm' : ''}`}
             style={{filter: 'none'}}
           />
         </div>
@@ -1513,11 +1513,11 @@ function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-5">
               <img
-                src="Daewoong Header for questionaire.png"
+                src="logo_1.png" // <-- Ganti dengan nama file gambar Anda
                 alt="Daewoong Indonesia"
-                className="h-10 w-auto object-contain bg-white px-3 py-1.5 rounded-lg"
+                className="h-10 w-auto object-contain bg-white/95 px-4 py-2 rounded-xl shadow-sm"
                 style={{filter: 'none'}}
               />
             </div>
