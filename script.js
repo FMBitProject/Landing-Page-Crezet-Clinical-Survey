@@ -1513,12 +1513,12 @@ function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-5">
               <img
                 src="Daewoong Header for questionaire.png"
                 alt="Daewoong Indonesia"
-                className="h-10 w-auto object-contain"
-                style={{filter:'brightness(0) invert(1) opacity(0.95)'}}
+                className="h-10 w-auto object-contain bg-white px-3 py-1.5 rounded-lg"
+                style={{filter: 'none'}}
               />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-md">
