@@ -117,7 +117,7 @@ function Hero() {
           {/* Stats bar */}
           <div className="fade-in-up delay-400 flex flex-wrap gap-x-8 gap-y-4">
             {[
-              {label:'Lokasi Survei', num:'5 Aktif · 15+ Potensial'},
+              {label:'Lokasi Survei', num:'15 Aktif · 10+ Potensial'},
               {label:'Durasi Pengamatan', num:'24 Minggu (6 Bulan)'},
               {label:'Tersedia 3 Dosis', num:'10/5 · 10/10 · 10/20 mg'},
               {label:'Keamanan Data', num:'100% Terenkripsi'},
@@ -960,7 +960,7 @@ function DoseCard() {
               Dosis Crezet yang Terdokumentasi
             </h3>
             <p className="text-white/70 text-base leading-relaxed">
-              Hanya tiga varian dosis berikut yang valid untuk dicatat dalam survei klinis ini. Pastikan Anda mencatat sesuai dengan kemasan yang diberikan kepada pasien.
+              Tiga varian dosis berikut yang akan dicatat dalam survei klinis ini. Pastikan Dokter mencatat sesuai dengan kemasan yang diberikan kepada pasien.
             </p>
           </div>
 
