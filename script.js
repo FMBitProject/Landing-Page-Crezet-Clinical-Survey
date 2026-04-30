@@ -806,26 +806,26 @@ function SurveyForm({ onComplete }) {
               <div>
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">2. Data Dokter Penanggung Jawab</h3>
                 <div className="grid md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">6. Jabatan dokter penanda tangan</label>
-                    <input type="text" name="jabatanDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">10. Background Dokter (Spesialis/Umum)</label>
-                    <input type="text" name="background" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">7. Alamat lengkap dokter penanda tangan</label>
-                    <textarea name="alamatDokter" rows="2" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none resize-none"></textarea>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">8. No. Telp aktif</label>
-                    <input type="tel" name="telpDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">9. Email aktif</label>
-                    <input type="email" name="emailDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
-                  </div>
+                <div>
+  <label className="block text-sm font-semibold text-gray-700 mb-1">6. Jabatan dokter penanda tangan</label>
+  <input type="text" name="jabatanDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+</div>
+<div>
+  <label className="block text-sm font-semibold text-gray-700 mb-1">7. Background Dokter (Spesialis/Umum)</label>
+  <input type="text" name="background" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+</div>
+<div className="md:col-span-2">
+  <label className="block text-sm font-semibold text-gray-700 mb-1">8. Alamat lengkap dokter penanda tangan</label>
+  <textarea name="alamatDokter" rows="2" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none resize-none"></textarea>
+</div>
+<div>
+  <label className="block text-sm font-semibold text-gray-700 mb-1">9. No. Telp aktif</label>
+  <input type="tel" name="telpDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+</div>
+<div>
+  <label className="block text-sm font-semibold text-gray-700 mb-1">10. Email aktif</label>
+  <input type="email" name="emailDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+</div>
                 </div>
               </div>
 
