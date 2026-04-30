@@ -18,7 +18,9 @@ function useScrollReveal() {
   });
 }
 
-/* ── Navbar ── */
+/* ══════════════════════════════════════════════════════════════════
+   Navbar — UPDATED: Logo menyatu dengan background
+   ══════════════════════════════════════════════════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,18 +41,18 @@ function Navbar() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'nav-blur shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <div className="flex items-center">
-  <img
-    src="logo_1.png"
-    alt="Daewoong Indonesia"
-    className="h-9 w-auto object-contain transition-all duration-500"
-    style={{
-      filter: scrolled 
-        ? 'none' 
-        : 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
-    }}
-  />
-</div>
+        <div className="flex items-center">
+          <img
+            src="logo_1.png"
+            alt="Daewoong Indonesia"
+            className="h-9 w-auto object-contain transition-all duration-500"
+            style={{
+              filter: scrolled
+                ? 'none'
+                : 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
+            }}
+          />
+        </div>
 
         <div className="hidden md:flex items-center gap-1">
           {links.map(l => (
@@ -569,8 +571,9 @@ function VideoSection() {
    SurveyForm — UPDATED:
    - Q12: multi-select dosis dengan logic "Belum Tersedia" exclusive
    - Q16: conditional input nama RPM/RPS jika dipilih "Ya"
+   - Auto-generated session password dikirim ke Google Sheets
    ══════════════════════════════════════════════════════════════════ */
-function SurveyForm({ onComplete }) {
+function SurveyForm({ onComplete, sessionPassword }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -583,8 +586,6 @@ function SurveyForm({ onComplete }) {
   
   const [sessionId] = useState(() => 'DOC-' + Date.now());
   const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
-  
-  const DOC_PASSWORD = 'clinical123';
 
   // Handler untuk Q12 multi-select dengan logic exclusive
   function toggleDose(doseValue) {
@@ -623,6 +624,7 @@ function SurveyForm({ onComplete }) {
     const formData = new FormData(e.target);
     formData.append("formType", "konfirmasi");
     formData.append("sessionId", sessionId);
+    formData.append("sessionPassword", sessionPassword);
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
@@ -651,6 +653,7 @@ function SurveyForm({ onComplete }) {
     formData.append("formType", "mou");
     formData.append("sessionId", sessionId);
     formData.append("ketersediaan", selectedDoses.join(', '));
+    formData.append("sessionPassword", sessionPassword);
     
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(() => {
@@ -667,7 +670,7 @@ function SurveyForm({ onComplete }) {
   }
 
   function copyPassword() {
-    navigator.clipboard.writeText(DOC_PASSWORD).then(() => {
+    navigator.clipboard.writeText(sessionPassword).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     });
@@ -1115,15 +1118,15 @@ function SurveyForm({ onComplete }) {
                   </div>
 
                   <p className="text-white/70 text-sm leading-relaxed mb-5">
-                    Sebagai apresiasi atas partisipasi Anda, berikut adalah password untuk mengunduh seluruh dokumen referensi survei klinis. Mohon simpan password ini dengan baik dan tidak dibagikan kepada pihak yang tidak berwenang.
+                    Sebagai apresiasi atas partisipasi Anda, berikut adalah password untuk mengunduh seluruh dokumen referensi survei klinis. <strong className="text-teal-300">Password ini berlaku khusus untuk sesi browser Anda saat ini</strong> dan akan di-generate ulang jika Anda menutup atau memuat ulang halaman.
                   </p>
 
                   <div className="bg-white/5 backdrop-blur rounded-2xl p-5 border border-white/10 mb-5">
-                    <div className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Password</div>
+                    <div className="text-white/40 text-[10px] uppercase tracking-widest mb-2">Password Sesi</div>
                     <div className="flex items-center gap-3">
                       <code className="flex-1 font-mono text-2xl md:text-3xl font-bold text-white tracking-wider"
                         style={{fontFamily:'DM Mono,monospace', letterSpacing:'0.1em'}}>
-                        {DOC_PASSWORD}
+                        {sessionPassword}
                       </code>
                       <button onClick={copyPassword}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95"
@@ -1162,7 +1165,7 @@ function SurveyForm({ onComplete }) {
 
                   <div className="flex items-center justify-center gap-2 mt-4 text-xs text-white/40">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Password berlaku hanya untuk sesi ini · Konfidensial
+                    Password unik untuk sesi ini · Akan reset saat refresh · Konfidensial
                   </div>
                 </div>
               </div>
@@ -1274,15 +1277,17 @@ function DoseCard() {
   );
 }
 
-/* ── Password Modal ── */
-function PasswordModal({ doc, onClose, onSuccess }) {
+/* ══════════════════════════════════════════════════════════════════
+   Password Modal — UPDATED: validasi pakai sessionPassword (bukan hardcoded)
+   ══════════════════════════════════════════════════════════════════ */
+function PasswordModal({ doc, onClose, onSuccess, sessionPassword }) {
   const [pw, setPw] = useState('');
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (pw === 'clinical123') {
+    if (pw === sessionPassword) {
       onSuccess(doc);
       onClose();
     } else {
@@ -1303,13 +1308,13 @@ function PasswordModal({ doc, onClose, onSuccess }) {
             </svg>
           </div>
           <h3 className="font-display font-bold text-pharma-900 text-xl mb-1" style={{fontFamily:'DM Sans,sans-serif'}}>Dokumen Terlindungi</h3>
-          <p className="text-gray-500 text-sm">Masukkan password untuk mengakses</p>
+          <p className="text-gray-500 text-sm">Masukkan password sesi untuk mengakses</p>
           {doc && <p className="text-pharma-600 text-xs font-medium mt-2 truncate">📄 {doc.title}</p>}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <input type="password" value={pw} onChange={e => { setPw(e.target.value); setError(false); }} placeholder="Masukkan password..." autoFocus
+            <input type="password" value={pw} onChange={e => { setPw(e.target.value); setError(false); }} placeholder="Masukkan password sesi..." autoFocus
               className={`w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all font-mono ${error ? 'border-red-400 bg-red-50 text-red-700' : 'border-pharma-200 bg-pharma-50 focus:border-pharma-400 text-pharma-900'}`} />
             {error && (
               <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
@@ -1329,8 +1334,10 @@ function PasswordModal({ doc, onClose, onSuccess }) {
   );
 }
 
-/* ── Documents (gated by formCompleted) ── */
-function Documents({ formCompleted }) {
+/* ══════════════════════════════════════════════════════════════════
+   Documents — UPDATED: terima sessionPassword & forward ke modal
+   ══════════════════════════════════════════════════════════════════ */
+function Documents({ formCompleted, sessionPassword }) {
   const [modalDoc, setModalDoc] = useState(null);
   const [unlockedDocs, setUnlockedDocs] = useState(new Set());
 
@@ -1430,7 +1437,7 @@ function Documents({ formCompleted }) {
           </span>
           <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Unduh Dokumen Referensi</h2>
           <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
-            Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026. Gunakan password yang telah diberikan untuk membuka setiap dokumen.
+            Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026. Gunakan password sesi yang telah diberikan untuk membuka setiap dokumen.
           </p>
         </div>
 
@@ -1487,21 +1494,24 @@ function Documents({ formCompleted }) {
 
         <div className="fade-in-up mt-8 flex items-center justify-center gap-4 text-sm text-gray-400">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Dokumen bersifat <span className="font-medium text-pharma-500">konfidensial</span> — dilindungi password untuk penggunaan internal tim survei klinis.
+          Dokumen bersifat <span className="font-medium text-pharma-500">konfidensial</span> — dilindungi password sesi untuk penggunaan internal tim survei klinis.
         </div>
       </div>
 
       {modalDoc && (
-        <PasswordModal doc={modalDoc} onClose={() => setModalDoc(null)} onSuccess={handleUnlock} />
+        <PasswordModal 
+          doc={modalDoc} 
+          onClose={() => setModalDoc(null)} 
+          onSuccess={handleUnlock}
+          sessionPassword={sessionPassword}
+        />
       )}
     </section>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   FOOTER — REDESIGNED
-   - Jakarta Office card dengan info lengkap + Google Maps embed
-   - Branding orange Daewoong dengan copyright
+   FOOTER — UPDATED: Logo putih menyatu dengan latar gelap & oranye
    ══════════════════════════════════════════════════════════════════ */
 function Footer() {
   return (
@@ -1517,16 +1527,16 @@ function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-5">
-  <img
-    src="logo_1.png"
-    alt="Daewoong Indonesia"
-    className="h-10 w-auto object-contain"
-    style={{
-      filter: 'brightness(0) invert(1) opacity(0.95)',
-    }}
-  />
-</div>
+            <div className="flex items-center gap-3 mb-5">
+              <img
+                src="logo_1.png"
+                alt="Daewoong Indonesia"
+                className="h-10 w-auto object-contain"
+                style={{
+                  filter: 'brightness(0) invert(1) opacity(0.95)',
+                }}
+              />
+            </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-md">
               Panduan resmi survei klinis penggunaan Crezet dalam praktik klinis rutin di Indonesia tahun 2026, dilakukan dengan standar Good Clinical Practice (ICH-GCP E6 R2).
             </p>
@@ -1647,23 +1657,23 @@ function Footer() {
 
         <div className="relative max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3">
           
-          {/* Daewoong Logo (white) */}
+          {/* Daewoong Logo (white) — invert filter biar nyatu dengan oranye */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5">
-              {/* Decorative icon */}
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:'rgba(255,255,255,0.2)', border:'1px solid rgba(255,255,255,0.3)'}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1.5">
-                  <path d="M12 2 L4 7 v10 l8 5 8-5 V7 z" fill="none"/>
-                  <path d="M12 2 v20 M4 7 l16 10 M20 7 L4 17" strokeWidth="1"/>
-                </svg>
+            <img
+              src="logo_1.png"
+              alt="Daewoong"
+              className="h-7 w-auto object-contain"
+              style={{
+                filter: 'brightness(0) invert(1)',
+              }}
+            />
+            <div className="h-7 w-px bg-white/30"></div>
+            <div className="leading-tight">
+              <div className="text-[10px] uppercase tracking-[0.15em] text-white/95 font-bold">
+                Pharmaceutical Indonesia
               </div>
-              <div className="leading-tight">
-                <div className="font-display font-bold text-white text-sm tracking-wide" style={{fontFamily:'DM Sans,sans-serif'}}>
-                  DAEWOONG
-                </div>
-                <div className="text-[9px] uppercase tracking-[0.15em] text-white/80 font-semibold">
-                  Pharmaceutical Indonesia
-                </div>
+              <div className="text-[9px] text-white/75 italic">
+                Health for Better Life
               </div>
             </div>
           </div>
@@ -1685,11 +1695,28 @@ function Footer() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   App
+   App — UPDATED: 
+   - Auto-generate session password (format: CRZT-XXXX-YYYY)
+   - Password reset saat refresh/tutup tab (pakai useState, bukan localStorage)
+   - Password di-pass ke SurveyForm & Documents
    ══════════════════════════════════════════════════════════════════ */
 function App() {
   useScrollReveal();
   const [formCompleted, setFormCompleted] = useState(false);
+
+  // Generate password 1x saat App mount (hilang saat refresh)
+  const [sessionPassword] = useState(() => {
+    // Karakter ambigu (I, O, 0, 1) dihilangkan biar gampang dibaca user
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const generate = (len) => {
+      let result = '';
+      for (let i = 0; i < len; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    };
+    return `CRZT-${generate(4)}-${generate(4)}`;
+  });
 
   return (
     <div>
@@ -1700,8 +1727,14 @@ function App() {
       <Timeline />
       <VideoSection />
       <DoseCard />
-      <SurveyForm onComplete={() => setFormCompleted(true)} />
-      <Documents formCompleted={formCompleted} />
+      <SurveyForm 
+        onComplete={() => setFormCompleted(true)} 
+        sessionPassword={sessionPassword}
+      />
+      <Documents 
+        formCompleted={formCompleted} 
+        sessionPassword={sessionPassword}
+      />
       <FAQ />
       <Footer />
     </div>
