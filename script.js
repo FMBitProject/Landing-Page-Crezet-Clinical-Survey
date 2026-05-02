@@ -329,6 +329,67 @@ function Eligibility() {
               </div>
             </div>
           </div>
+
+          {/* ═══════════════════════════════════════════
+              DATA TAMBAHAN (OPSIONAL)
+              ═══════════════════════════════════════════ */}
+          <div className="bg-white border border-pharma-100 rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-4 border-b border-pharma-100 flex items-center gap-3" style={{background:'linear-gradient(135deg, rgba(26,52,128,0.04), rgba(45,212,191,0.04))'}}>
+              <div className="w-10 h-10 rounded-xl bg-pharma-50 flex items-center justify-center text-pharma-600 flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h5 className="font-display font-bold text-pharma-900 text-base" style={{fontFamily:'DM Sans,sans-serif'}}>
+                  Data Tambahan
+                </h5>
+                <p className="text-xs text-gray-500 italic">Jika tersedia — bersifat opsional</p>
+              </div>
+              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                style={{background:'#fef3c7', color:'#92400e'}}>
+                Opsional
+              </span>
+            </div>
+
+            <div className="divide-y divide-gray-100">
+              {/* Tanda Vital */}
+              <div className="flex flex-col md:flex-row gap-4 px-6 py-5">
+                <div className="md:w-48 flex-shrink-0 flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                  </div>
+                  <div className="font-display font-semibold text-pharma-900 text-sm pt-1.5" style={{fontFamily:'DM Sans,sans-serif'}}>
+                    Tanda Vital
+                  </div>
+                </div>
+                <div className="flex-1 text-sm text-gray-600 leading-relaxed">
+                  Dokumentasikan <strong className="text-pharma-800">Tinggi badan</strong>, <strong className="text-pharma-800">Berat badan</strong>, <strong className="text-pharma-800">Indeks massa tubuh (IMT)</strong>, dan <strong className="text-pharma-800">Tekanan darah</strong>.
+                </div>
+              </div>
+
+              {/* Nilai Laboratorium Opsional */}
+              <div className="flex flex-col md:flex-row gap-4 px-6 py-5">
+                <div className="md:w-48 flex-shrink-0 flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-4"/>
+                    </svg>
+                  </div>
+                  <div className="font-display font-semibold text-pharma-900 text-sm pt-1.5" style={{fontFamily:'DM Sans,sans-serif'}}>
+                    Nilai Laboratorium Opsional
+                  </div>
+                </div>
+                <div className="flex-1 text-sm text-gray-600 leading-relaxed">
+                  <span className="text-pharma-800 font-medium">Kolesterol total (TC)</span>, <span className="text-pharma-800 font-medium">Trigliserida (TG)</span>, <span className="text-pharma-800 font-medium">kolesterol non-HDL</span> (VLDL, IDL, Lipoprotein(a), kilomikron), atau nilai laboratorium lainnya jika tersedia.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )
     },
@@ -840,7 +901,12 @@ function SurveyForm({ onComplete, sessionPassword }) {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">6. Kepemilikan Klinik</label>
-                    <input type="text" name="kepemilikan" required placeholder="Contoh: Milik sendiri / Bersama" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                    <select name="kepemilikan" required defaultValue="" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none bg-white">
+                      <option value="" disabled>-- Pilih kepemilikan --</option>
+                      <option value="Milik Sendiri">Milik Sendiri</option>
+                      <option value="Bersama">Bersama</option>
+                      <option value="Dokter Mitra">Dokter Mitra</option>
+                    </select>
                   </div>
                 </div>
               </div>
