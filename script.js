@@ -19,7 +19,49 @@ function useScrollReveal() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Navbar — UPDATED: Logo menyatu dengan background
+   PageLoader — Skeleton loader saat React pertama kali load
+   ══════════════════════════════════════════════════════════════════ */
+function PageLoader({ show }) {
+  if (!show) return null;
+  return (
+    <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center" style={{transition:'opacity 0.5s ease'}}>
+      <div className="relative mb-6">
+        <div className="w-16 h-16 rounded-full border-4 border-pharma-100"></div>
+        <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-pharma-600 border-t-transparent animate-spin"></div>
+      </div>
+      <div className="font-display font-bold text-pharma-900 text-lg mb-1" style={{fontFamily:'DM Sans,sans-serif'}}>Memuat Halaman</div>
+      <div className="text-gray-500 text-sm">Survei Klinis Crezet 2026</div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BackToTop — Floating button untuk scroll ke atas
+   ══════════════════════════════════════════════════════════════════ */
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setVisible(window.scrollY > 600);
+    window.addEventListener('scroll', handler);
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  if (!visible) return null;
+  return (
+    <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+      className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all hover:shadow-xl hover:-translate-y-1 active:scale-95"
+      style={{background:'linear-gradient(135deg, #2550cc, #1a3480)', color:'white'}}
+      aria-label="Back to top">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+      </svg>
+    </button>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Navbar
    ══════════════════════════════════════════════════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -151,17 +193,6 @@ function DataIntegrity() {
     { code: '03', name: 'Klinik XXX', color: '#7c3aed', status: 'active' },
     { code: '04', name: 'RS XXX', color: '#b45309', status: 'active' },
     { code: '05', name: 'Klinik XXX', color: '#0369a1', status: 'active' },
-    { code: '06', name: 'Klinik Utama Medika', color: '#6b7280', status: 'potential' },
-    { code: '07', name: 'RS Siloam Kebon Jeruk', color: '#6b7280', status: 'potential' },
-    { code: '08', name: 'Apotek Kimia Farma Sudirman', color: '#6b7280', status: 'potential' },
-    { code: '09', name: 'Klinik Prodia Fatmawati', color: '#6b7280', status: 'potential' },
-    { code: '10', name: 'RS Premier Bintaro', color: '#6b7280', status: 'potential' },
-    { code: '11', name: 'Klinik Sehat Sentosa', color: '#6b7280', status: 'potential' },
-    { code: '12', name: 'RS Pondok Indah', color: '#6b7280', status: 'potential' },
-    { code: '13', name: 'Apotek Guardian Kelapa Gading', color: '#6b7280', status: 'potential' },
-    { code: '14', name: 'Klinik Medistra Jakarta', color: '#6b7280', status: 'potential' },
-    { code: '15', name: 'RS Mitra Keluarga Bekasi', color: '#6b7280', status: 'potential' },
-    { code: '16', name: 'Klinik Penyakit Dalam Menteng', color: '#6b7280', status: 'potential' },
   ];
   const activeSites = sites.filter(s => s.status === 'active');
 
@@ -270,7 +301,9 @@ function DataIntegrity() {
   );
 }
 
-/* ── Eligibility ── */
+/* ══════════════════════════════════════════════════════════════════
+   Eligibility — UPDATED: Tab Lab + Data Tambahan Opsional
+   ══════════════════════════════════════════════════════════════════ */
 function Eligibility() {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -313,6 +346,7 @@ function Eligibility() {
               </div>
             </div>
           </div>
+
           <div className="grid md:grid-cols-1 gap-5">
             <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
               <h5 className="font-semibold text-pharma-800 mb-3 text-sm uppercase tracking-wide">Rentang Waktu Pengambilan Lab</h5>
@@ -355,7 +389,6 @@ function Eligibility() {
             </div>
 
             <div className="divide-y divide-gray-100">
-              {/* Tanda Vital */}
               <div className="flex flex-col md:flex-row gap-4 px-6 py-5">
                 <div className="md:w-48 flex-shrink-0 flex items-start gap-3">
                   <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0">
@@ -372,7 +405,6 @@ function Eligibility() {
                 </div>
               </div>
 
-              {/* Nilai Laboratorium Opsional */}
               <div className="flex flex-col md:flex-row gap-4 px-6 py-5">
                 <div className="md:w-48 flex-shrink-0 flex items-start gap-3">
                   <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
@@ -602,7 +634,7 @@ function VideoSection() {
           <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-gray-200" style={{ paddingTop: '56.25%' }}>
             <iframe
               className="absolute top-0 left-0 w-full h-full"
-              src="https://www.youtube.com/embed/FC3y9llDXuM"
+              src="https://www.youtube.com/embed/FC3y9llDXuM?rel=0&modestbranding=1"
               title="Video Panduan Teknis"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -629,36 +661,132 @@ function VideoSection() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   ProgressStepper — Visual indicator step 1 → 2 → 3
+   ══════════════════════════════════════════════════════════════════ */
+function ProgressStepper({ currentStep }) {
+  const steps = [
+    { num: 1, label: 'Konfirmasi Panduan', shortLabel: 'Konfirmasi' },
+    { num: 2, label: 'Kelengkapan MOU', shortLabel: 'MOU' },
+    { num: 3, label: 'Akses Dokumen', shortLabel: 'Selesai' },
+  ];
+
+  return (
+    <div className="mb-10 max-w-3xl mx-auto">
+      <div className="flex items-center justify-between relative">
+        {/* Background line */}
+        <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-0" style={{margin:'0 2.5rem'}}></div>
+        {/* Progress line */}
+        <div className="absolute top-5 left-0 h-0.5 bg-pharma-600 -z-0 transition-all duration-500" 
+          style={{
+            margin:'0 2.5rem',
+            width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : 'calc(100% - 5rem)'
+          }}></div>
+
+        {steps.map((step, i) => {
+          const isCompleted = currentStep > step.num;
+          const isActive = currentStep === step.num;
+          return (
+            <div key={i} className="flex flex-col items-center relative z-10 flex-1">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+                isCompleted ? 'bg-teal-500 text-white shadow-md' :
+                isActive ? 'bg-pharma-600 text-white shadow-lg scale-110' :
+                'bg-white border-2 border-gray-200 text-gray-400'
+              }`}>
+                {isCompleted ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                ) : step.num}
+              </div>
+              <div className="mt-2 text-center">
+                <div className={`text-xs md:text-sm font-semibold transition-colors ${
+                  isActive ? 'text-pharma-900' : isCompleted ? 'text-teal-600' : 'text-gray-400'
+                }`}>
+                  <span className="hidden md:inline">{step.label}</span>
+                  <span className="md:hidden">{step.shortLabel}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ErrorBanner — Error recovery UI dengan kontak support
+   ══════════════════════════════════════════════════════════════════ */
+function ErrorBanner({ message, onRetry, onDismiss }) {
+  if (!message) return null;
+  return (
+    <div className="mb-6 bg-red-50 border-2 border-red-200 rounded-2xl p-5 shadow-sm animate-fade-in">
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div className="flex-1">
+          <h4 className="font-display font-bold text-red-900 text-base mb-1" style={{fontFamily:'DM Sans,sans-serif'}}>Terjadi Kesalahan</h4>
+          <p className="text-red-700 text-sm mb-3 leading-relaxed">{message}</p>
+          <div className="flex flex-wrap gap-2">
+            {onRetry && (
+              <button onClick={onRetry}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Coba Lagi
+              </button>
+            )}
+            <a href="mailto:dpi.info@daewoong.co.kr?subject=Bantuan%20Survei%20Klinis%20Crezet"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-red-300 text-red-700 text-xs font-semibold hover:bg-red-50 transition-colors">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Hubungi Medical Affairs
+            </a>
+            {onDismiss && (
+              <button onClick={onDismiss} className="px-3 py-1.5 text-red-500 text-xs font-medium hover:text-red-700">
+                Tutup
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    SurveyForm — UPDATED:
-   - Q12: multi-select dosis dengan logic "Belum Tersedia" exclusive
-   - Q16: conditional input nama RPM/RPS jika dipilih "Ya"
-   - Auto-generated session password dikirim ke Google Sheets
+   - Validasi NIK (16 digit), No. Telp (Indonesia), Email
+   - Review & Confirm screen sebelum submit MOU (Step 2.5)
+   - Loading state dengan timeout 15 detik
+   - Error recovery dengan kontak Medical Affairs
+   - Progress stepper visual
    ══════════════════════════════════════════════════════════════════ */
 function SurveyForm({ onComplete, sessionPassword }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   
-  // Q12: Multi-select dosis dengan exclusive "Belum Tersedia"
   const [selectedDoses, setSelectedDoses] = useState([]);
-  
-  // Q16: Conditional - kalo pilih "Ya" wajib isi nama RPM/RPS
   const [q16Answer, setQ16Answer] = useState('');
+  
+  // Untuk review screen — store data MOU sementara sebelum confirm
+  const [mouPreviewData, setMouPreviewData] = useState(null);
+  const [showReview, setShowReview] = useState(false);
   
   const [sessionId] = useState(() => 'DOC-' + Date.now());
   const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
 
-  // Handler untuk Q12 multi-select dengan logic exclusive
   function toggleDose(doseValue) {
     if (doseValue === 'Belum Tersedia') {
-      // Kalo klik "Belum Tersedia", clear semua dan set ke "Belum Tersedia" saja
       if (selectedDoses.includes('Belum Tersedia')) {
         setSelectedDoses([]);
       } else {
         setSelectedDoses(['Belum Tersedia']);
       }
     } else {
-      // Kalo klik dosis lain, otomatis hapus "Belum Tersedia" dari selection
       let newSelection = selectedDoses.filter(d => d !== 'Belum Tersedia');
       if (newSelection.includes(doseValue)) {
         newSelection = newSelection.filter(d => d !== doseValue);
@@ -671,30 +799,54 @@ function SurveyForm({ onComplete, sessionPassword }) {
 
   function isDoseDisabled(doseValue) {
     if (doseValue === 'Belum Tersedia') {
-      // "Belum Tersedia" disabled kalo ada dosis lain yang sudah dipilih
       return selectedDoses.some(d => d !== 'Belum Tersedia') && selectedDoses.length > 0;
     } else {
-      // Dosis lain disabled kalo "Belum Tersedia" sudah dipilih
       return selectedDoses.includes('Belum Tersedia');
     }
   }
 
+  /* ─── Validasi field ─── */
+  function validateNIK(nik) {
+    return /^\d{16}$/.test(String(nik).trim());
+  }
+
+  function validatePhone(phone) {
+    // Format Indonesia: 08xxxxxxxxxx (10-13 digit), atau +62xxxxxxxxxx
+    const cleaned = String(phone).replace(/[\s\-\.]/g, '');
+    return /^(\+62|62|0)[0-9]{8,12}$/.test(cleaned);
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
+  }
+
+  /* ─── Submit dengan timeout & error handling ─── */
+  function fetchWithTimeout(url, options, timeout = 15000) {
+    return Promise.race([
+      fetch(url, options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Koneksi terlalu lambat. Periksa internet Anda dan coba lagi.')), timeout)
+      )
+    ]);
+  }
+
   function submitKonfirmasi(e) {
     e.preventDefault();
+    setErrorMsg('');
     setLoading(true);
     
     const payload = {
       formType: "konfirmasi",
       sessionId: sessionId,
-      namaDokter: e.target.namaDokter.value,
-      tempatPraktek: e.target.tempatPraktek.value,
+      namaDokter: e.target.namaDokter.value.trim(),
+      tempatPraktek: e.target.tempatPraktek.value.trim(),
       pahamPanduan: e.target.pahamPanduan.value,
       pahamVideo: e.target.pahamVideo.value,
-      pertanyaan: e.target.pertanyaan.value,
+      pertanyaan: e.target.pertanyaan.value.trim(),
       sessionPassword: sessionPassword
     };
     
-    fetch(scriptURL, { 
+    fetchWithTimeout(scriptURL, { 
       method: 'POST', 
       mode: 'no-cors',
       body: JSON.stringify(payload),
@@ -708,45 +860,87 @@ function SurveyForm({ onComplete, sessionPassword }) {
       .catch(error => {
         console.error('Error!', error.message);
         setLoading(false);
-        alert('Terjadi kesalahan. Silakan coba lagi.');
+        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi atau hubungi tim Medical Affairs jika masalah berlanjut.');
       });
   }
 
-  function submitMOU(e) {
+  /* ─── Step 2: User klik "Lanjut ke Review", bukan langsung submit ─── */
+  function previewMOU(e) {
     e.preventDefault();
+    setErrorMsg('');
     
+    // Validasi Q12
     if (selectedDoses.length === 0) {
-      alert('Mohon pilih ketersediaan Crezet di klinik Anda (pertanyaan no. 12)');
+      setErrorMsg('Mohon pilih ketersediaan Crezet di klinik Anda (pertanyaan no. 12)');
+      window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
       return;
     }
-    
-    setLoading(true);
-    
-    const payload = {
-      formType: "mou",
-      sessionId: sessionId,
-      legalKlinik: e.target.legalKlinik.value,
-      alamatKlinik: e.target.alamatKlinik.value,
-      namaMewakili: e.target.namaMewakili.value,
-      jabatanMewakili: e.target.jabatanMewakili.value,
-      nik: e.target.nik.value,
+
+    // Validasi NIK
+    const nikValue = e.target.nik.value.trim();
+    if (!validateNIK(nikValue)) {
+      setErrorMsg('NIK harus terdiri dari 16 digit angka. Mohon periksa kembali.');
+      window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+      return;
+    }
+
+    // Validasi Telp
+    const telpValue = e.target.telpDokter.value.trim();
+    if (!validatePhone(telpValue)) {
+      setErrorMsg('Format nomor telepon tidak valid. Gunakan format Indonesia: 08xxxxxxxxxx atau +62xxxxxxxxxx.');
+      window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+      return;
+    }
+
+    // Validasi Email
+    const emailValue = e.target.emailDokter.value.trim();
+    if (!validateEmail(emailValue)) {
+      setErrorMsg('Format email tidak valid. Mohon periksa kembali.');
+      window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+      return;
+    }
+
+    // Semua validasi lolos — simpan data ke state untuk review
+    const previewData = {
+      legalKlinik: e.target.legalKlinik.value.trim(),
+      alamatKlinik: e.target.alamatKlinik.value.trim(),
+      namaMewakili: e.target.namaMewakili.value.trim(),
+      jabatanMewakili: e.target.jabatanMewakili.value.trim(),
+      nik: nikValue,
       kepemilikan: e.target.kepemilikan.value,
-      jabatanDokter: e.target.jabatanDokter.value,
-      background: e.target.background.value,
-      alamatDokter: e.target.alamatDokter.value,
-      telpDokter: e.target.telpDokter.value,
-      emailDokter: e.target.emailDokter.value,
+      jabatanDokter: e.target.jabatanDokter.value.trim(),
+      background: e.target.background.value.trim(),
+      alamatDokter: e.target.alamatDokter.value.trim(),
+      telpDokter: telpValue,
+      emailDokter: emailValue,
       ketersediaan: selectedDoses.join(', '),
       q13: e.target.q13.value,
       q14: e.target.q14.value,
       q15: e.target.q15.value,
       q16: e.target.q16.value,
-      namaRPMRPS: e.target.namaRPMRPS ? e.target.namaRPMRPS.value : '',
+      namaRPMRPS: e.target.namaRPMRPS ? e.target.namaRPMRPS.value.trim() : '',
       q17: e.target.q17.value,
+    };
+    
+    setMouPreviewData(previewData);
+    setShowReview(true);
+    window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
+  }
+
+  /* ─── Submit final setelah user confirm di review screen ─── */
+  function submitMOUFinal() {
+    if (!mouPreviewData) return;
+    setErrorMsg('');
+    setLoading(true);
+    
+    const payload = {
+      formType: "mou",
+      sessionId: sessionId,
+      ...mouPreviewData,
       sessionPassword: sessionPassword
     };
     
-    fetch(scriptURL, { 
+    fetchWithTimeout(scriptURL, { 
       method: 'POST', 
       mode: 'no-cors',
       body: JSON.stringify(payload),
@@ -754,6 +948,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
     })
       .then(() => {
         setLoading(false);
+        setShowReview(false);
         setStep(3);
         if (onComplete) onComplete();
         window.scrollTo({ top: document.getElementById('form').offsetTop - 100, behavior: 'smooth' });
@@ -761,7 +956,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
       .catch(error => {
         console.error('Error!', error.message);
         setLoading(false);
-        alert('Terjadi kesalahan. Silakan coba lagi.');
+        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi atau hubungi tim Medical Affairs jika masalah berlanjut.');
       });
   }
 
@@ -779,7 +974,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
     }
   }
 
-  // Dose options untuk Q12
   const doseOptions = [
     { value: '10/5 mg', color: '#65a30d', bg: '#f0fdf4', border: '#86efac' },
     { value: '10/10 mg', color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
@@ -790,6 +984,16 @@ function SurveyForm({ onComplete, sessionPassword }) {
   return (
     <section id="form" className="py-24 bg-white border-t border-pharma-100 transition-all duration-500">
       <div className="max-w-4xl mx-auto px-6">
+        
+        {/* PROGRESS STEPPER */}
+        <ProgressStepper currentStep={step} />
+
+        {/* ERROR BANNER */}
+        <ErrorBanner 
+          message={errorMsg} 
+          onRetry={errorMsg.includes('Koneksi') || errorMsg.includes('menyimpan') ? () => setErrorMsg('') : null}
+          onDismiss={() => setErrorMsg('')}
+        />
         
         {/* === STEP 1: FORM KONFIRMASI === */}
         {step === 1 && (
@@ -863,7 +1067,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
         )}
 
         {/* === STEP 2: FORM KELENGKAPAN MOU === */}
-        {step === 2 && (
+        {step === 2 && !showReview && (
           <div className="animate-fade-in">
             <div className="text-center mb-10">
               <span className="badge text-teal-600 bg-teal-50 mb-4 inline-flex items-center gap-2">
@@ -874,7 +1078,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
               <p className="text-gray-500 text-lg">Konfirmasi awal telah <b>tersimpan</b>. Mohon lengkapi data administratif berikut.</p>
             </div>
             
-            <form onSubmit={submitMOU} className="space-y-8 bg-white p-8 md:p-10 rounded-3xl border border-gray-200 shadow-xl">
+            <form onSubmit={previewMOU} className="space-y-8 bg-white p-8 md:p-10 rounded-3xl border border-gray-200 shadow-xl">
               
               <div>
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">1. Informasi Legal Klinik/RS</h3>
@@ -896,8 +1100,14 @@ function SurveyForm({ onComplete, sessionPassword }) {
                     <input type="text" name="jabatanMewakili" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">5. NIK sesuai KTP perwakilan</label>
-                    <input type="number" name="nik" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      5. NIK sesuai KTP perwakilan
+                      <span className="text-xs font-normal text-gray-500 ml-1">(16 digit)</span>
+                    </label>
+                    <input type="text" name="nik" required maxLength="16" pattern="\d{16}" inputMode="numeric"
+                      placeholder="Contoh: 3171012345678901"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none font-mono" />
+                    <p className="text-xs text-gray-500 mt-1">Format: 16 digit angka tanpa spasi atau strip</p>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">6. Kepemilikan Klinik</label>
@@ -927,12 +1137,21 @@ function SurveyForm({ onComplete, sessionPassword }) {
                     <textarea name="alamatDokter" rows="2" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none resize-none"></textarea>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">10. No. Telp aktif</label>
-                    <input type="tel" name="telpDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      10. No. Telp aktif
+                      <span className="text-xs font-normal text-gray-500 ml-1">(format Indonesia)</span>
+                    </label>
+                    <input type="tel" name="telpDokter" required 
+                      placeholder="Contoh: 081234567890"
+                      pattern="^(\+62|62|0)[0-9]{8,12}$"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                    <p className="text-xs text-gray-500 mt-1">Format: 08xxx atau +62xxx</p>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">11. Email aktif</label>
-                    <input type="email" name="emailDokter" required className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
+                    <input type="email" name="emailDokter" required 
+                      placeholder="contoh@email.com"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-pharma-500 outline-none" />
                   </div>
                 </div>
               </div>
@@ -941,9 +1160,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
                 <h3 className="font-bold text-pharma-800 text-xl mb-4 pb-2 border-b border-gray-100">3. Kuesioner Kelayakan</h3>
                 <div className="space-y-4">
                   
-                  {/* ═══════════════════════════════════════════
-                      Q12: MULTI-SELECT DOSIS dengan logic EXCLUSIVE "Belum Tersedia"
-                      ═══════════════════════════════════════════ */}
+                  {/* Q12 */}
                   <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
                     <label className="block text-sm font-semibold text-gray-800 mb-1">
                       12. Ketersediaan Crezet di Klinik Anda
@@ -971,7 +1188,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
                               color: isSelected ? 'white' : dose.color,
                             }}>
                             
-                            {/* Checkmark icon kalo selected */}
                             {isSelected && (
                               <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-white flex items-center justify-center shadow-sm">
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={dose.color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -999,7 +1215,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
                       })}
                     </div>
                     
-                    {/* Helper text di bawah */}
                     {selectedDoses.length > 0 && (
                       <div className="mt-3 text-xs flex items-center gap-2"
                         style={{color: selectedDoses.includes('Belum Tersedia') ? '#6b7280' : '#0d9488'}}>
@@ -1009,7 +1224,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
                     )}
                   </div>
                   
-                  {/* Q13–Q15: Standard radio questions */}
                   {[
                     {name: 'q13', label: '13. Apakah dokter sudah dijelaskan mengenai Survey Klinis Crezet?'},
                     {name: 'q14', label: '14. Apakah sudah dijelaskan bahwa biaya pembelian obat (Crezet) pasien survey tidak ditanggung Daewoong?'},
@@ -1030,9 +1244,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
                     </div>
                   ))}
 
-                  {/* ═══════════════════════════════════════════
-                      Q16: CONDITIONAL — kalo "Ya" muncul input nama RPM/RPS
-                      ═══════════════════════════════════════════ */}
+                  {/* Q16 conditional */}
                   <div className="bg-gray-50 p-4 rounded-xl">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
                       <label className="text-sm font-semibold text-gray-800 flex-1">
@@ -1056,7 +1268,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
                       </div>
                     </div>
                     
-                    {/* Conditional input — slide down kalo "Ya" */}
                     <div style={{
                       maxHeight: q16Answer === 'Sudah / Ya' ? '200px' : '0px',
                       opacity: q16Answer === 'Sudah / Ya' ? 1 : 0,
@@ -1083,7 +1294,6 @@ function SurveyForm({ onComplete, sessionPassword }) {
                     </div>
                   </div>
 
-                  {/* Q17: Standard radio */}
                   <div className="bg-gray-50 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <label className="text-sm font-semibold text-gray-800 flex-1">
                       17. Apakah dokter bersedia untuk terlibat dalam Survey Klinis Crezet?
@@ -1103,16 +1313,118 @@ function SurveyForm({ onComplete, sessionPassword }) {
               </div>
 
               <div className="pt-4 border-t border-gray-200">
-                <button type="submit" disabled={loading} className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5'}`}>
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                      Menyimpan Data MOU...
-                    </>
-                  ) : 'Kirim Seluruh Data MOU ✓'}
+                <button type="submit" className="w-full py-4 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  Lanjut ke Review Data →
                 </button>
+                <p className="text-center text-xs text-gray-500 mt-3">
+                  Anda akan diberikan kesempatan untuk review semua data sebelum disubmit
+                </p>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* === STEP 2.5: REVIEW & CONFIRM SCREEN === */}
+        {step === 2 && showReview && mouPreviewData && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-10">
+              <span className="badge text-purple-600 bg-purple-50 mb-4 inline-flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Review & Konfirmasi
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Periksa Data Anda</h2>
+              <p className="text-gray-500 text-lg">Mohon periksa kembali data yang akan disubmit. Pastikan semua informasi sudah benar.</p>
+            </div>
+            
+            <div className="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
+              {/* Section: Legal Klinik */}
+              <div className="px-7 py-5 border-b border-gray-100" style={{background:'linear-gradient(135deg, rgba(26,52,128,0.04), rgba(45,212,191,0.04))'}}>
+                <h3 className="font-display font-bold text-pharma-900 text-lg flex items-center gap-2" style={{fontFamily:'DM Sans,sans-serif'}}>
+                  <span className="w-7 h-7 rounded-lg bg-pharma-600 text-white flex items-center justify-center text-sm">1</span>
+                  Informasi Legal Klinik/RS
+                </h3>
+              </div>
+              <div className="p-7 grid md:grid-cols-2 gap-x-8 gap-y-4">
+                <ReviewItem label="Nama Legal Klinik/RS" value={mouPreviewData.legalKlinik} />
+                <ReviewItem label="Kepemilikan" value={mouPreviewData.kepemilikan} />
+                <ReviewItem label="Alamat Klinik/RS" value={mouPreviewData.alamatKlinik} fullWidth />
+                <ReviewItem label="Nama Perwakilan TTD" value={mouPreviewData.namaMewakili} />
+                <ReviewItem label="Jabatan Perwakilan" value={mouPreviewData.jabatanMewakili} />
+                <ReviewItem label="NIK Perwakilan" value={mouPreviewData.nik} mono />
+              </div>
+
+              {/* Section: Data Dokter */}
+              <div className="px-7 py-5 border-y border-gray-100" style={{background:'linear-gradient(135deg, rgba(26,52,128,0.04), rgba(45,212,191,0.04))'}}>
+                <h3 className="font-display font-bold text-pharma-900 text-lg flex items-center gap-2" style={{fontFamily:'DM Sans,sans-serif'}}>
+                  <span className="w-7 h-7 rounded-lg bg-pharma-600 text-white flex items-center justify-center text-sm">2</span>
+                  Data Dokter Penanggung Jawab
+                </h3>
+              </div>
+              <div className="p-7 grid md:grid-cols-2 gap-x-8 gap-y-4">
+                <ReviewItem label="Jabatan Dokter" value={mouPreviewData.jabatanDokter} />
+                <ReviewItem label="Background Dokter" value={mouPreviewData.background} />
+                <ReviewItem label="Alamat Dokter" value={mouPreviewData.alamatDokter} fullWidth />
+                <ReviewItem label="No. Telp" value={mouPreviewData.telpDokter} mono />
+                <ReviewItem label="Email" value={mouPreviewData.emailDokter} mono />
+              </div>
+
+              {/* Section: Kuesioner */}
+              <div className="px-7 py-5 border-y border-gray-100" style={{background:'linear-gradient(135deg, rgba(26,52,128,0.04), rgba(45,212,191,0.04))'}}>
+                <h3 className="font-display font-bold text-pharma-900 text-lg flex items-center gap-2" style={{fontFamily:'DM Sans,sans-serif'}}>
+                  <span className="w-7 h-7 rounded-lg bg-pharma-600 text-white flex items-center justify-center text-sm">3</span>
+                  Kuesioner Kelayakan
+                </h3>
+              </div>
+              <div className="p-7 space-y-3">
+                <ReviewItem label="Q12 - Ketersediaan Crezet" value={mouPreviewData.ketersediaan} />
+                <ReviewItem label="Q13 - Sudah dijelaskan ttg Survey" value={mouPreviewData.q13} />
+                <ReviewItem label="Q14 - Biaya obat tidak ditanggung" value={mouPreviewData.q14} />
+                <ReviewItem label="Q15 - Manfaat potongan harga lab" value={mouPreviewData.q15} />
+                <ReviewItem label="Q16 - Consultation fee dijelaskan" value={mouPreviewData.q16} />
+                {mouPreviewData.namaRPMRPS && (
+                  <ReviewItem label="Nama RPM/RPS" value={mouPreviewData.namaRPMRPS} />
+                )}
+                <ReviewItem label="Q17 - Bersedia terlibat" value={mouPreviewData.q17} />
+              </div>
+
+              {/* Confirmation buttons */}
+              <div className="p-7 border-t border-gray-100 bg-gray-50">
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 flex items-start gap-3">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                  <p className="text-sm text-amber-800">
+                    <strong>Pastikan semua data sudah benar.</strong> Setelah disubmit, data akan tersimpan permanen di sistem dan tidak dapat diubah lagi tanpa menghubungi tim Medical Affairs.
+                  </p>
+                </div>
+                
+                <div className="flex flex-col md:flex-row gap-3">
+                  <button onClick={() => { setShowReview(false); window.scrollTo({top: document.getElementById('form').offsetTop - 100, behavior: 'smooth'}); }}
+                    disabled={loading}
+                    className="md:w-auto py-3 px-6 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Edit Data
+                  </button>
+                  <button onClick={submitMOUFinal}
+                    disabled={loading}
+                    className={`flex-1 py-3 px-6 rounded-xl text-white font-bold transition-all flex items-center justify-center gap-2 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5'}`}>
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        Menyimpan Data MOU...
+                      </>
+                    ) : (
+                      <>
+                        Konfirmasi & Submit ✓
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1279,6 +1591,103 @@ function SurveyForm({ onComplete, sessionPassword }) {
   );
 }
 
+/* ── Helper component untuk Review screen ── */
+function ReviewItem({ label, value, fullWidth, mono }) {
+  return (
+    <div className={fullWidth ? 'md:col-span-2' : ''}>
+      <div className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 mb-1">{label}</div>
+      <div className={`text-pharma-900 font-medium ${mono ? 'font-mono text-sm' : 'text-sm'}`}>
+        {value || <span className="text-gray-400 italic">Tidak diisi</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ContactSupport — NEW: Section kontak Medical Affairs sebelum Footer
+   ══════════════════════════════════════════════════════════════════ */
+function ContactSupport() {
+  const channels = [
+    {
+      icon: (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>),
+      label: 'Email',
+      value: 'dpi.info@daewoong.co.kr',
+      href: 'mailto:dpi.info@daewoong.co.kr?subject=Bantuan%20Survei%20Klinis%20Crezet',
+      desc: 'Respons dalam 1-2 hari kerja',
+      color: '#3b6fe8',
+      bg: '#eff6ff',
+    },
+    {
+      icon: (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>),
+      label: 'Telepon',
+      value: '+62-021-3972-1100',
+      href: 'tel:+62-021-3972-1100',
+      desc: 'Senin-Jumat, 08.00-17.00 WIB',
+      color: '#0d9488',
+      bg: '#ccfbf1',
+    },
+    {
+      icon: (<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>),
+      label: 'WhatsApp',
+      value: '+62-812-3456-7890',
+      href: 'https://wa.me/6281234567890?text=Halo%20Medical%20Affairs%20Daewoong%2C%20saya%20butuh%20bantuan%20terkait%20Survei%20Klinis%20Crezet',
+      desc: 'Chat untuk respons cepat',
+      color: '#16a34a',
+      bg: '#f0fdf4',
+    },
+  ];
+
+  return (
+    <section id="contact" className="py-24 bg-white">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="fade-in-up text-center mb-12">
+          <span className="badge text-pharma-500 mb-4 inline-flex items-center gap-2 justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Butuh Bantuan?
+          </span>
+          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Hubungi Tim Medical Affairs</h2>
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto" style={{textWrap:'pretty'}}>
+            Jika Anda menemukan kesulitan teknis atau memiliki pertanyaan terkait survei klinis, tim kami siap membantu melalui berbagai saluran berikut.
+          </p>
+        </div>
+
+        <div className="fade-in-up grid md:grid-cols-3 gap-6 mb-10">
+          {channels.map((ch, i) => (
+            <a key={i} href={ch.href} target={ch.href.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer"
+              className="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-lg transition-all group">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110" 
+                style={{background: ch.bg, color: ch.color}}>
+                {ch.icon}
+              </div>
+              <div className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 mb-1">{ch.label}</div>
+              <div className="font-display font-bold text-pharma-900 text-lg mb-2 break-all" style={{fontFamily:'DM Sans,sans-serif'}}>{ch.value}</div>
+              <div className="text-xs text-gray-500 mb-3">{ch.desc}</div>
+              <div className="inline-flex items-center gap-1 text-xs font-semibold transition-all group-hover:gap-2" style={{color: ch.color}}>
+                Hubungi sekarang
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div className="fade-in-up bg-pharma-50 rounded-2xl p-6 border border-pharma-100 flex items-start gap-4">
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-pharma-600 flex-shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h4 className="font-display font-bold text-pharma-900 mb-1" style={{fontFamily:'DM Sans,sans-serif'}}>Untuk pertanyaan terkait isi panduan</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Sebelum menghubungi tim, mohon cek <a href="#faq" className="text-pharma-600 font-semibold hover:underline">FAQ</a> di halaman ini — banyak pertanyaan umum sudah dijawab di sana.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── FAQ ── */
 function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
@@ -1288,7 +1697,7 @@ function FAQ() {
     {q:'Apa saja dosis Crezet yang didokumentasikan?',a:'Dosis yang valid untuk didokumentasikan adalah: 10/5 mg, 10/10 mg, atau 10/20 mg. Pastikan dosis yang dicatat sesuai dengan dosis aktual yang diberikan kepada pasien pada setiap titik pengamatan.',tag:'Dosis'},
     {q:'Bagaimana pelaporan jika terjadi efek samping?',a:'Dokumentasikan semua Adverse Event (AE) dan Serious Adverse Event (SAE) yang terjadi selama periode pengamatan. Jika efek samping dianggap signifikan secara klinis, sertakan nilai SGPT, SGOT, dan CK yang relevan. Semua kejadian harus dilaporkan tanpa terkecuali.',tag:'AE / SAE'},
     {q:'Apakah pasien yang menghentikan Crezet di tengah studi tetap dicatat?',a:'Ya. Pasien yang menghentikan penggunaan Crezet di tengah periode survei tetap harus didokumentasikan hingga titik penghentian, termasuk alasan penghentian (jika tersedia). Data parsial tetap bernilai untuk analisis.',tag:'Penghentian Terapi'},
-    {q:'Siapa yang dapat dihubungi untuk pertanyaan teknis?',a:'Pertanyaan teknis terkait pengisian data, format spreadsheet, atau interpretasi kriteria dapat disampaikan langsung kepada tim Medical Affairs Daewoong Pharmaceutical Indonesia melalui saluran komunikasi yang telah disediakan untuk masing-masing lokasi survei.',tag:'Kontak'},
+    {q:'Siapa yang dapat dihubungi untuk pertanyaan teknis?',a:'Pertanyaan teknis terkait pengisian data, format spreadsheet, atau interpretasi kriteria dapat disampaikan langsung kepada tim Medical Affairs Daewoong Pharmaceutical Indonesia melalui section "Butuh Bantuan?" di bawah halaman ini, atau langsung melalui email dpi.info@daewoong.co.kr.',tag:'Kontak'},
   ];
 
   return (
@@ -1378,9 +1787,7 @@ function DoseCard() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   Password Modal — UPDATED: validasi pakai sessionPassword (bukan hardcoded)
-   ══════════════════════════════════════════════════════════════════ */
+/* ── Password Modal ── */
 function PasswordModal({ doc, onClose, onSuccess, sessionPassword }) {
   const [pw, setPw] = useState('');
   const [error, setError] = useState(false);
@@ -1435,9 +1842,7 @@ function PasswordModal({ doc, onClose, onSuccess, sessionPassword }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   Documents — UPDATED: terima sessionPassword & forward ke modal
-   ══════════════════════════════════════════════════════════════════ */
+/* ── Documents ── */
 function Documents({ formCompleted, sessionPassword }) {
   const [modalDoc, setModalDoc] = useState(null);
   const [unlockedDocs, setUnlockedDocs] = useState(new Set());
@@ -1611,22 +2016,12 @@ function Documents({ formCompleted, sessionPassword }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   FOOTER — UPDATED: Logo putih menyatu dengan latar gelap & oranye
-   ══════════════════════════════════════════════════════════════════ */
+/* ── Footer ── */
 function Footer() {
   return (
     <footer className="bg-pharma-950 text-white">
-      
-      {/* ═══════════════════════════════════════
-          MAIN FOOTER CONTENT
-          ═══════════════════════════════════════ */}
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
-        
-        {/* Top section: Brand + Office Info */}
         <div className="grid lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
-          
-          {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-5">
               <img
@@ -1642,7 +2037,6 @@ function Footer() {
               Panduan resmi survei klinis penggunaan Crezet dalam praktik klinis rutin di Indonesia tahun 2026, dilakukan dengan standar Good Clinical Practice (ICH-GCP E6 R2).
             </p>
             
-            {/* Compliance badges */}
             <div className="flex flex-wrap gap-2">
               {['ICH-GCP E6 R2', 'UU PDP 2022', 'BPOM Compliant'].map(b => (
                 <span key={b} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
@@ -1654,11 +2048,8 @@ function Footer() {
             </div>
           </div>
 
-          {/* Jakarta Office Card */}
           <div className="lg:col-span-3">
             <div className="bg-white/5 rounded-2xl overflow-hidden border border-white/10">
-              
-              {/* Office Header */}
               <div className="px-6 py-5 border-b border-white/10">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>
@@ -1673,7 +2064,6 @@ function Footer() {
                     </h4>
                   </div>
                   
-                  {/* Quick contact */}
                   <div className="flex flex-col gap-1.5 text-xs">
                     <a href="mailto:dpi.info@daewoong.co.kr" className="flex items-center gap-2 text-white/70 hover:text-teal-300 transition-colors">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1690,7 +2080,6 @@ function Footer() {
                   </div>
                 </div>
 
-                {/* Address */}
                 <div className="mt-4 flex items-start gap-2 text-sm text-white/60 leading-relaxed">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-1 flex-shrink-0 text-white/40">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
@@ -1701,7 +2090,6 @@ function Footer() {
                 </div>
               </div>
 
-              {/* Embedded Google Maps */}
               <div className="relative w-full h-52 bg-white/5">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.4583773869447!2d106.80766297500559!3d-6.224515093774166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f1495e07c5cb%3A0xdfb56e5b3ce9b0e6!2sRevenue%20Tower!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid"
@@ -1714,7 +2102,6 @@ function Footer() {
                   title="Jakarta Office Location"
                 ></iframe>
                 
-                {/* Open in maps overlay button */}
                 <a 
                   href="https://maps.google.com/?q=Revenue+Tower+SCBD+Jakarta" 
                   target="_blank" 
@@ -1731,7 +2118,6 @@ function Footer() {
           </div>
         </div>
 
-        {/* Bottom row: Versioning */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3 text-white/40">
             <span>Panduan Survei Klinis Crezet</span>
@@ -1747,18 +2133,12 @@ function Footer() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════
-          ORANGE COPYRIGHT BAR (Daewoong Branding)
-          ═══════════════════════════════════════ */}
       <div className="relative" style={{background:'linear-gradient(90deg, #f97316 0%, #ea580c 100%)'}}>
-        {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none" 
           style={{backgroundImage:'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 50%, white 1px, transparent 1px)', backgroundSize:'40px 40px'}}>
         </div>
 
         <div className="relative max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-3">
-          
-          {/* Daewoong Logo (white) — invert filter biar nyatu dengan oranye */}
           <div className="flex items-center gap-3">
             <img
               src="logo_1.png"
@@ -1779,7 +2159,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Copyright text */}
           <div className="flex items-center gap-2 text-white text-sm">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-90">
               <circle cx="12" cy="12" r="10"/>
@@ -1796,18 +2175,23 @@ function Footer() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   App — UPDATED: 
-   - Auto-generate session password (format: CRZT-XXXX-YYYY)
-   - Password reset saat refresh/tutup tab (pakai useState, bukan localStorage)
-   - Password di-pass ke SurveyForm & Documents
+   App — UPDATED:
+   - PageLoader saat first load
+   - BackToTop floating button
+   - ContactSupport section antara Documents dan FAQ
    ══════════════════════════════════════════════════════════════════ */
 function App() {
   useScrollReveal();
   const [formCompleted, setFormCompleted] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
 
-  // Generate password 1x saat App mount (hilang saat refresh)
+  useEffect(() => {
+    // Hide page loader setelah React fully mounted
+    const timer = setTimeout(() => setPageLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [sessionPassword] = useState(() => {
-    // Karakter ambigu (I, O, 0, 1) dihilangkan biar gampang dibaca user
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     const generate = (len) => {
       let result = '';
@@ -1821,6 +2205,7 @@ function App() {
 
   return (
     <div>
+      <PageLoader show={pageLoading} />
       <Navbar />
       <Hero />
       <DataIntegrity />
@@ -1836,8 +2221,21 @@ function App() {
         formCompleted={formCompleted} 
         sessionPassword={sessionPassword}
       />
+      <ContactSupport />
       <FAQ />
       <Footer />
+      <BackToTop />
+
+      {/* Print-friendly styles */}
+      <style>{`
+        @media print {
+          nav, #form, .fixed, footer { display: none !important; }
+          body { background: white !important; color: black !important; }
+          section { page-break-inside: avoid; padding: 1rem 0 !important; }
+          .bg-pharma-950, .bg-pharma-900, .bg-pharma-800 { background: white !important; color: black !important; }
+          .text-white, .text-white\\/70, .text-white\\/60, .text-white\\/40 { color: black !important; }
+        }
+      `}</style>
     </div>
   );
 }
