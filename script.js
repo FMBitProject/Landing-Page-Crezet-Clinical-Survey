@@ -19,12 +19,142 @@ function useScrollReveal() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PageLoader — Skeleton loader saat React pertama kali load
+   AccessGate — Layar Kunci Berbasis CSV Google Sheets
+   ══════════════════════════════════════════════════════════════════ */
+function AccessGate({ onAccessGranted, csvUrl }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch(csvUrl);
+      if (!res.ok) throw new Error('Gagal terhubung ke sistem verifikasi.');
+      
+      const text = await res.text();
+      
+      // Parse CSV sederhana
+      const rows = text.split('\n').map(r => r.trim()).filter(r => r);
+      if (rows.length < 2) throw new Error('Database akses kosong.');
+
+      const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+      const codeIdx = headers.indexOf('access_code');
+      const statusIdx = headers.indexOf('status');
+      const expireIdx = headers.indexOf('expires_at');
+
+      let isValid = false;
+
+      for (let i = 1; i < rows.length; i++) {
+        const cols = rows[i].split(',').map(c => c.trim());
+        
+        // Cek apakah kode cocok
+        if (cols[codeIdx] === code) {
+          const status = cols[statusIdx]?.toLowerCase();
+          const expires = cols[expireIdx];
+
+          // Cek Status Active
+          if (status !== 'active' && status !== 'aktif') {
+            throw new Error('Kode akses ini telah diblokir (revoked) oleh Admin.');
+          }
+
+          // Cek Expired (jika ada isinya)
+          if (expires) {
+            const expireDate = new Date(expires);
+            if (!isNaN(expireDate) && new Date() > expireDate) {
+              throw new Error('Kode akses ini sudah kadaluarsa.');
+            }
+          }
+
+          isValid = true;
+          break;
+        }
+      }
+
+      if (isValid) {
+        onAccessGranted();
+      } else {
+        setError('Kode akses tidak ditemukan atau salah.');
+      }
+    } catch (err) {
+      setError(err.message || 'Terjadi kesalahan saat memverifikasi kode.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-pharma-950 relative overflow-hidden">
+      {/* Background Ornaments */}
+      <div style={{position:'absolute',top:'-10%',right:'-5%',width:'500px',height:'500px',background:'radial-gradient(circle,rgba(59,111,232,0.15) 0%,transparent 70%)',pointerEvents:'none'}}></div>
+      <div style={{position:'absolute',bottom:'-15%',left:'-8%',width:'600px',height:'600px',background:'radial-gradient(circle,rgba(20,184,166,0.1) 0%,transparent 70%)',pointerEvents:'none'}}></div>
+
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 md:p-10 relative z-10 animate-fade-in">
+        <div className="text-center mb-8">
+          <img src="logo_1.png" alt="Daewoong" className="h-10 w-auto mx-auto mb-6 object-contain" />
+          <h2 className="font-display text-2xl font-bold text-pharma-900 mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>
+            Akses Terbatas
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Silakan masukkan kode akses yang telah diberikan oleh tim Medical Affairs untuk membuka panduan ini.
+          </p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <input 
+                type="text" 
+                value={code} 
+                onChange={e => { setCode(e.target.value); setError(''); }} 
+                placeholder="Masukkan Kode Akses..." 
+                autoFocus
+                className={`w-full pl-11 pr-4 py-3.5 rounded-xl border text-sm outline-none transition-all font-mono font-medium tracking-wide ${error ? 'border-red-400 bg-red-50 text-red-700' : 'border-gray-200 focus:border-pharma-500 focus:ring-2 focus:ring-pharma-100 text-pharma-900'}`} 
+              />
+            </div>
+            {error && (
+              <p className="text-red-500 text-xs mt-2 flex items-center gap-1.5 animate-fade-in">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="6" cy="6" r="5"/><line x1="6" y1="4" x2="6" y2="6"/><line x1="6" y1="8" x2="6.01" y2="8"/></svg>
+                {error}
+              </p>
+            )}
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading || !code.trim()} 
+            className={`w-full py-3.5 rounded-xl text-white text-sm font-bold transition-all flex items-center justify-center gap-2 ${loading || !code.trim() ? 'bg-gray-300 cursor-not-allowed' : 'bg-pharma-600 hover:bg-pharma-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5'}`}>
+            {loading ? (
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            ) : 'Verifikasi Akses'}
+          </button>
+        </form>
+
+        <div className="mt-8 pt-5 border-t border-gray-100 text-center">
+          <p className="text-xs text-gray-400">
+            Hanya ditujukan untuk keperluan internal dan dokter yang berpartisipasi dalam Survei Klinis Crezet 2026.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PageLoader
    ══════════════════════════════════════════════════════════════════ */
 function PageLoader({ show }) {
   if (!show) return null;
   return (
-    <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center" style={{transition:'opacity 0.5s ease'}}>
+    <div className="fixed inset-0 z-[300] bg-white flex flex-col items-center justify-center" style={{transition:'opacity 0.5s ease'}}>
       <div className="relative mb-6">
         <div className="w-16 h-16 rounded-full border-4 border-pharma-100"></div>
         <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-pharma-600 border-t-transparent animate-spin"></div>
@@ -36,7 +166,7 @@ function PageLoader({ show }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BackToTop — Floating button untuk scroll ke atas
+   BackToTop
    ══════════════════════════════════════════════════════════════════ */
 function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -668,7 +798,7 @@ function ProgressStepper({ currentStep }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ErrorBanner — Error recovery UI dengan kontak support
+   ErrorBanner — Error recovery UI
    ══════════════════════════════════════════════════════════════════ */
 function ErrorBanner({ message, onRetry, onDismiss }) {
   if (!message) return null;
@@ -691,11 +821,6 @@ function ErrorBanner({ message, onRetry, onDismiss }) {
                 Coba Lagi
               </button>
             )}
-            <a href="mailto:dpi.info@daewoong.co.kr?subject=Bantuan%20Survei%20Klinis%20Crezet"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-red-300 text-red-700 text-xs font-semibold hover:bg-red-50 transition-colors">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              Hubungi Medical Affairs
-            </a>
             {onDismiss && (
               <button onClick={onDismiss} className="px-3 py-1.5 text-red-500 text-xs font-medium hover:text-red-700">
                 Tutup
@@ -904,7 +1029,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
       .catch(error => {
         console.error('Error!', error.message);
         setLoading(false);
-        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi atau hubungi tim Medical Affairs jika masalah berlanjut.');
+        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi.');
       });
   }
 
@@ -980,7 +1105,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
       .catch(error => {
         console.error('Error!', error.message);
         setLoading(false);
-        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi atau hubungi tim Medical Affairs jika masalah berlanjut.');
+        setErrorMsg(error.message || 'Tidak dapat menyimpan data. Silakan coba lagi.');
       });
   }
 
@@ -2360,8 +2485,12 @@ function Footer() {
    ══════════════════════════════════════════════════════════════════ */
 function App() {
   useScrollReveal();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formCompleted, setFormCompleted] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+
+  // 🔴 PENTING: Ganti URL di bawah ini dengan link CSV yang kamu dapat dari Google Sheets -> Publish to Web
+  const ACCESS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyhlQRZ-q-DjUCNCkQt5y6G3m9-EClvpEgD3TQEuFFoKuvnXdQr3b77iDM0oF73inZk1MQViPdz5b5/pub?gid=1782305325&single=true&output=csv";
 
   useEffect(() => {
     // Hide page loader setelah React fully mounted
@@ -2381,9 +2510,17 @@ function App() {
     return `CRZT-${generate(4)}-${generate(4)}`;
   });
 
+  if (!isAuthenticated) {
+    return (
+      <>
+        <PageLoader show={pageLoading} />
+        <AccessGate onAccessGranted={() => setIsAuthenticated(true)} csvUrl={ACCESS_CSV_URL} />
+      </>
+    );
+  }
+
   return (
     <div>
-      <PageLoader show={pageLoading} />
       <Navbar />
       <Hero />
       <DataIntegrity />
