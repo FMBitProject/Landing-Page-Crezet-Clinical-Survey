@@ -1457,7 +1457,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
                           className="w-4 h-4 text-pharma-600" />
                         <span className="text-sm font-medium">Ya / Sudah</span>
                       </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
+                      <label className="flex items-center gap-1.5 cursor-pointer">
                         <input type="radio" name="q17" value="Belum / Tidak"
                           onChange={() => clearFieldError('q17')}
                           className="w-4 h-4 text-pharma-600" />
@@ -1806,7 +1806,6 @@ function FAQ() {
     {q:'Apa saja dosis Crezet yang didokumentasikan?',a:'Dosis yang valid untuk didokumentasikan adalah: 10/5 mg, 10/10 mg, atau 10/20 mg. Pastikan dosis yang dicatat sesuai dengan dosis aktual yang diberikan kepada pasien pada setiap titik pengamatan.',tag:'Dosis'},
     {q:'Bagaimana pelaporan jika terjadi efek samping?',a:'Dokumentasikan semua Adverse Event (AE) dan Serious Adverse Event (SAE) yang terjadi selama periode pengamatan. Jika efek samping dianggap signifikan secara klinis, sertakan nilai SGPT, SGOT, dan CK yang relevan. Semua kejadian harus dilaporkan tanpa terkecuali.',tag:'AE / SAE'},
     {q:'Apakah pasien yang menghentikan Crezet di tengah studi tetap dicatat?',a:'Ya. Pasien yang menghentikan penggunaan Crezet di tengah periode survei tetap harus didokumentasikan hingga titik penghentian, termasuk alasan penghentian (jika tersedia). Data parsial tetap bernilai untuk analisis.',tag:'Penghentian Terapi'},
-    {q:'Siapa yang dapat dihubungi untuk pertanyaan teknis?',a:'Pertanyaan teknis terkait pengisian data, format spreadsheet, atau interpretasi kriteria dapat disampaikan langsung kepada tim Medical Affairs Daewoong Pharmaceutical Indonesia melalui email dpi.info@daewoong.co.kr.',tag:'Kontak'},
   ];
 
   return (
