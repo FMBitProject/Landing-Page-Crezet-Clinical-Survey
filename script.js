@@ -780,7 +780,7 @@ function ErrorBanner({ message, onRetry, onDismiss }) {
     const [showReview, setShowReview] = useState(false);
     
     const [sessionId] = useState(() => 'DOC-' + Date.now());
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyxHIYu-emakfDUoq4x9N2REFb40i8R8gRmfK4vo1br7jtqxu45HJHbSKVn-R6zNUe1-Q/exec';
+    const scriptURL = '/api/submit';
   
     function toggleDose(doseValue) {
       if (doseValue === 'Belum Tersedia') {
@@ -946,9 +946,8 @@ function ErrorBanner({ message, onRetry, onDismiss }) {
       
       fetchWithTimeout(scriptURL, { 
         method: 'POST', 
-        mode: 'no-cors',
         body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        headers: { 'Content-Type': 'application/json' }
       })
         .then(() => {
           setLoading(false);
@@ -1021,9 +1020,8 @@ function ErrorBanner({ message, onRetry, onDismiss }) {
       
       fetchWithTimeout(scriptURL, { 
         method: 'POST', 
-        mode: 'no-cors',
         body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        headers: { 'Content-Type': 'application/json' }
       })
         .then(() => {
           setLoading(false);
