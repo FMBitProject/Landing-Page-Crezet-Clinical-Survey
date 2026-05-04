@@ -2490,7 +2490,7 @@ function App() {
   const [pageLoading, setPageLoading] = useState(true);
 
   // 🔴 PENTING: Ganti URL di bawah ini dengan link CSV yang kamu dapat dari Google Sheets -> Publish to Web
-  const ACCESS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyhlQRZ-q-DjUCNCkQt5y6G3m9-EClvpEgD3TQEuFFoKuvnXdQr3b77iDM0oF73inZk1MQViPdz5b5/pub?gid=1782305325&single=true&output=csv";
+  const ACCESS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcAYp68QR-F_y3xkzT70s2Imw1KOIvzTXTyE7jOgRMzAFQEFZW-P1OrX1nsAM7pXUTQHNcHefWoDEl/pub?gid=0&single=true&output=csv";
 
   useEffect(() => {
     // Hide page loader setelah React fully mounted
