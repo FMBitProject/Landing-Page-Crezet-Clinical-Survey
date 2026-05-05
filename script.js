@@ -1745,7 +1745,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
 
               <div className="px-7 py-6 space-y-4 text-sm text-gray-700 leading-relaxed" style={{textWrap:'pretty'}}>
                 <p>
-                  Seluruh informasi pribadi, data administratif, dan respons kuesioner yang Anda sampaikan melalui formulir ini bersifat <strong className="text-pharma-900">strictly confidential</strong> dan akan diperlakukan sesuai dengan prinsip-prinsip etika riset klinis (<em>Good Clinical Practice — ICH-GCP E6 R2</em>) serta peraturan perundang-undangan yang berlaku di Republik Indonesia, termasuk Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi.
+                  Seluruh informasi pribadi, data administratif, dan respons kuesioner yang Anda sampaikan melalui formulir ini bersifat <strong className="text-pharma-900">strictly confidential</strong> dan akan diperlakukan sesuai dengan peraturan perundang-undangan yang berlaku di Republik Indonesia, termasuk Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi.
                 </p>
                 
                 <div className="grid md:grid-cols-2 gap-4 my-5">
@@ -1774,7 +1774,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
                 <div className="flex items-start gap-2 mt-4 pt-4 border-t border-pharma-100 text-xs text-gray-500">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                   <span>
-                    Pernyataan ini sejalan dengan <em>Declaration of Helsinki (2013)</em>, prinsip <em>ICH-GCP E6 (R2)</em>, serta SOP Pengelolaan Data Klinis Daewoong Pharmaceutical Indonesia.
+                    Pernyataan ini sejalan dengan SOP Pengelolaan Data Klinis Daewoong Pharmaceutical Indonesia.
                   </span>
                 </div>
               </div>
@@ -2340,11 +2340,11 @@ function Footer() {
               />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-md">
-              Panduan resmi survei klinis penggunaan Crezet dalam praktik klinis rutin di Indonesia tahun 2026, dilakukan dengan standar Good Clinical Practice (ICH-GCP E6 R2).
+              Panduan resmi survei klinis penggunaan Crezet dalam praktik klinis rutin di Indonesia tahun 2026.
             </p>
             
             <div className="flex flex-wrap gap-2">
-              {['ICH-GCP E6 R2', 'UU PDP 2022', 'BPOM Compliant'].map(b => (
+              {['UU PDP 2022'].map(b => (
                 <span key={b} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
                   style={{background:'rgba(45,212,191,0.1)', color:'#5eead4', border:'1px solid rgba(45,212,191,0.2)'}}>
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
