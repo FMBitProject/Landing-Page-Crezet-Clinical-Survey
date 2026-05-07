@@ -852,7 +852,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
   const [showReview, setShowReview] = useState(false);
   
   const [sessionId] = useState(() => 'DOC-' + Date.now());
-  const scriptURL = '/api/submit';
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbw1BXjXv5Ov8JYzuuPanSToiB7V88Clm3Xcrn35gGY_MbsaNrDrMuveLoU8GceMB9-obA/exec';
 
   function toggleDose(doseValue) {
     if (doseValue === 'Belum Tersedia') {
