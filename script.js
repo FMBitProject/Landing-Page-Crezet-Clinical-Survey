@@ -1019,7 +1019,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
     fetchWithTimeout(scriptURL, { 
       method: 'POST', 
       body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' } // <-- INI YANG PALING PENTING
     })
       .then(() => {
         setLoading(false);
@@ -1093,7 +1093,7 @@ function SurveyForm({ onComplete, sessionPassword }) {
     fetchWithTimeout(scriptURL, { 
       method: 'POST', 
       body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' } // <-- UBAH JUGA DI SINI
     })
       .then(() => {
         setLoading(false);
