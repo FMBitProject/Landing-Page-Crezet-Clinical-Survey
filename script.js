@@ -206,6 +206,7 @@ function Navbar() {
   const links = [
     { label: 'Integritas Data', href: '#integrity' },
     { label: 'Kelayakan', href: '#eligibility' },
+    { label: 'Informed Consent', href: '#consent' },
     { label: 'Timeline', href: '#timeline' },
     { label: 'FAQ', href: '#faq' },
   ];
@@ -226,7 +227,7 @@ function Navbar() {
           />
         </div>
 
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {links.map(l => (
             <a key={l.href} href={l.href}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -235,9 +236,16 @@ function Navbar() {
               {l.label}
             </a>
           ))}
+          <a href="#form"
+            className={`ml-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              scrolled ? 'bg-pharma-600 text-white hover:bg-pharma-700' : 'bg-white text-pharma-900 hover:bg-pharma-50'
+            }`}>
+            Isi Form
+          </a>
         </div>
 
-        <button className={`md:hidden p-2 ${scrolled ? 'text-pharma-700' : 'text-white'}`}
+        <button className={`lg:hidden p-2 ${scrolled ? 'text-pharma-700' : 'text-white'}`}
+          aria-label="Buka menu" aria-expanded={mobileOpen}
           onClick={() => setMobileOpen(!mobileOpen)}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
             <rect y="3" width="20" height="2" rx="1"/>
@@ -248,13 +256,17 @@ function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-pharma-100 px-6 py-4 flex flex-col gap-2">
+        <div className="lg:hidden bg-white border-t border-pharma-100 px-6 py-4 flex flex-col gap-2">
           {links.map(l => (
             <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)}
               className="py-2 text-pharma-700 font-medium border-b border-pharma-50 last:border-0">
               {l.label}
             </a>
           ))}
+          <a href="#form" onClick={() => setMobileOpen(false)}
+            className="mt-2 py-3 rounded-xl bg-pharma-600 text-white text-center font-semibold">
+            Isi Form Pendaftaran
+          </a>
         </div>
       )}
     </nav>
@@ -277,26 +289,35 @@ function Hero() {
 
           <h1 className="fade-in-up delay-100 font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6" style={{fontFamily:'DM Sans,sans-serif',fontWeight:700}}>
             Panduan Survei<br/>
-            <span style={{background:'linear-gradient(90deg,#93b9ff,#2dd4bf)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>
-              Klinis Crezet
-            </span>
+            <span className="text-teal-400">Klinis Crezet</span>
             <br/>2026
           </h1>
 
-          <p className="fade-in-up delay-200 text-white/70 text-lg md:text-xl leading-relaxed mb-10 max-w-xl" style={{textWrap:'pretty'}}>
+          <p className="fade-in-up delay-200 text-white/75 text-lg md:text-xl leading-relaxed mb-8 max-w-xl" style={{textWrap:'pretty'}}>
             Memastikan keseragaman, kelengkapan, dan akurasi data praktik klinis rutin untuk kualitas analisis survei terbaik.
           </p>
 
-          <div className="fade-in-up delay-400 flex flex-wrap gap-x-8 gap-y-4">
+          <div className="fade-in-up delay-300 flex flex-wrap gap-3 mb-12">
+            <a href="#form" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-pharma-900 font-semibold text-sm shadow-lg hover:bg-pharma-50 transition-colors">
+              Mulai Pendaftaran
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#consent" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/25 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+              Syarat Informed Consent
+            </a>
+          </div>
+
+          <div className="fade-in-up delay-400 grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/15 bg-white/15 max-w-4xl">
             {[
               {label:'Lokasi Survei', num:'15 Aktif · 10+ Potensial'},
               {label:'Durasi Pengamatan', num:'24 Minggu (6 Bulan)'},
               {label:'Tersedia 3 Dosis', num:'10/5 · 10/10 · 10/20 mg'},
               {label:'Keamanan Data', num:'100% Terenkripsi'},
             ].map(s => (
-              <div key={s.label} className="text-white">
-                <div className="text-white/50 text-xs mb-1 uppercase tracking-wide">{s.label}</div>
-                <div className="font-display font-bold text-lg leading-tight" style={{fontFamily:'DM Sans,sans-serif'}}>{s.num}</div>
+              <div key={s.label} className="text-white bg-pharma-950/60 px-5 py-4">
+                <div className="text-white/55 text-[11px] mb-1.5 uppercase tracking-wider">{s.label}</div>
+                <div className="font-display font-bold text-base md:text-lg leading-tight" style={{fontFamily:'DM Sans,sans-serif'}}>{s.num}</div>
               </div>
             ))}
           </div>
@@ -355,7 +376,7 @@ function DataIntegrity() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Integritas Data
           </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Prinsip Pengelolaan Data</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Prinsip Pengelolaan Data</h2>
           <p className="text-gray-500 max-w-xl text-lg leading-relaxed" style={{textWrap:'pretty'}}>
             Standar ketat untuk memastikan validitas dan reprodusibilitas setiap titik data yang dikumpulkan.
           </p>
@@ -442,14 +463,15 @@ function Eligibility() {
       label: 'Kriteria Dasar',
       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
       content: (
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            {icon:'👤',title:'Batas Usia',desc:'Pasien berusia ≥18 tahun pada saat indeks pengobatan pertama dengan Crezet.',highlight:'≥ 18 Tahun'},
-            {icon:'🫀',title:'Diagnosis',desc:'Telah didiagnosis dislipidemia dan diindikasikan untuk menerima Crezet berdasarkan penilaian dokter serta sesuai label lokal — sesuai dengan diskresi dokter penanggung jawab.',highlight:'Dislipidemia'},
-            {icon:'💊',title:'Penggunaan Crezet',desc:'Penggunaan Crezet sesuai dengan praktik klinis rutin — bukan dalam konteks uji klinis atau studi intervensi.',highlight:'Praktik Rutin'},
+            {icon:'user',title:'Batas Usia',desc:'Pasien berusia ≥18 tahun pada saat indeks pengobatan pertama dengan Crezet.',highlight:'≥ 18 Tahun'},
+            {icon:'heart',title:'Diagnosis',desc:'Telah didiagnosis dislipidemia dan diindikasikan untuk menerima Crezet berdasarkan penilaian dokter serta sesuai label lokal — sesuai dengan diskresi dokter penanggung jawab.',highlight:'Dislipidemia'},
+            {icon:'pill',title:'Penggunaan Crezet',desc:'Penggunaan Crezet sesuai dengan praktik klinis rutin — bukan dalam konteks uji klinis atau studi intervensi.',highlight:'Praktik Rutin'},
+            {icon:'consent',title:'Informed Consent',desc:'Pasien telah menandatangani formulir informed consent resmi Crezet Clinical Survey sebelum data apa pun dicatat.',highlight:'Wajib · Semua Pasien'},
           ].map((item, i) => (
-            <div key={i} className="bg-pharma-50 rounded-xl p-6 border border-pharma-100">
-              <div className="text-2xl mb-3">{item.icon}</div>
+            <div key={i} className="bg-white rounded-2xl p-6 border border-pharma-100 shadow-sm card-hover">
+              <div className="w-11 h-11 rounded-xl bg-pharma-50 text-pharma-600 flex items-center justify-center mb-4"><Icon name={item.icon} size={22} /></div>
               <h4 className="font-display font-semibold text-pharma-900 mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>{item.title}</h4>
               <p className="text-gray-500 text-sm leading-relaxed mb-3">{item.desc}</p>
               <span className="inline-block bg-pharma-600 text-white text-xs font-semibold px-3 py-1 rounded-full">{item.highlight}</span>
@@ -559,22 +581,22 @@ function Eligibility() {
         <div className="space-y-5">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              {title:'Gangguan Hati',icon:'🫁',color:'#dc2626',bg:'#fef2f2',border:'#fecaca',desc:'Penyakit hati aktif atau peningkatan transaminase (SGOT/SGPT) persisten >3× batas normal atas.'},
-              {title:'Gangguan Ginjal',icon:'🫘',color:'#d97706',bg:'#fffbeb',border:'#fde68a',desc:'Gangguan ginjal berat dengan nilai CrCl <30 mL/menit atau pasien yang menjalani dialisis.'},
-              {title:'Kondisi Reproduksi',icon:'🤰',color:'#7c3aed',bg:'#faf5ff',border:'#ddd6fe',desc:'Kehamilan, menyusui, atau wanita berpotensi subur yang tidak menggunakan kontrasepsi yang memadai.'},
-              {title:'Alergi & Hipersensitivitas',icon:'⚠️',color:'#b45309',bg:'#fffbeb',border:'#fde68a',desc:'Hipersensitivitas terhadap rosuvastatin, ezetimibe, atau komponen tablet Crezet lainnya.'},
-              {title:'Miopati',icon:'💪',color:'#0369a1',bg:'#eff6ff',border:'#bfdbfe',desc:'Miopati aktif atau riwayat miopati yang diinduksi statin sebelumnya.'},
-              {title:'Partisipasi Studi Lain',icon:'📋',color:'#065f46',bg:'#f0fdf4',border:'#bbf7d0',desc:'Pasien yang saat ini berpartisipasi dalam survei atau studi obat/intervensi lainnya secara bersamaan.'},
+              {title:'Gangguan Hati',icon:'liver',color:'#dc2626',bg:'#fef2f2',border:'#fecaca',desc:'Penyakit hati aktif atau peningkatan transaminase (SGOT/SGPT) persisten >3× batas normal atas.'},
+              {title:'Gangguan Ginjal',icon:'drop',color:'#b45309',bg:'#fffbeb',border:'#fde68a',desc:'Gangguan ginjal berat dengan nilai CrCl <30 mL/menit atau pasien yang menjalani dialisis.'},
+              {title:'Kondisi Reproduksi',icon:'baby',color:'#7c3aed',bg:'#faf5ff',border:'#ddd6fe',desc:'Kehamilan, menyusui, atau wanita berpotensi subur yang tidak menggunakan kontrasepsi yang memadai.'},
+              {title:'Alergi & Hipersensitivitas',icon:'alert',color:'#b45309',bg:'#fffbeb',border:'#fde68a',desc:'Hipersensitivitas terhadap rosuvastatin, ezetimibe, atau komponen tablet Crezet lainnya.'},
+              {title:'Miopati',icon:'activity',color:'#0369a1',bg:'#eff6ff',border:'#bfdbfe',desc:'Miopati aktif atau riwayat miopati yang diinduksi statin sebelumnya.'},
+              {title:'Partisipasi Studi Lain',icon:'clipboard',color:'#065f46',bg:'#f0fdf4',border:'#bbf7d0',desc:'Pasien yang saat ini berpartisipasi dalam survei atau studi obat/intervensi lainnya secara bersamaan.'},
             ].map((item, i) => (
-              <div key={i} className="rounded-xl p-6 border" style={{background:item.bg,borderColor:item.border}}>
+              <div key={i} className="rounded-2xl p-6 border" style={{background:item.bg,borderColor:item.border}}>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xl">{item.icon}</span>
+                  <span className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0" style={{color:item.color}}><Icon name={item.icon} size={18} /></span>
                   <h4 className="font-display font-semibold text-sm" style={{fontFamily:'DM Sans,sans-serif',color:item.color}}>{item.title}</h4>
                   <span className="ml-auto w-5 h-5 rounded-full flex items-center justify-center" style={{background:item.color+'22'}}>
                     <svg width="10" height="10" viewBox="0 0 10 10" fill={item.color}><line x1="2" y1="5" x2="8" y2="5" stroke={item.color} strokeWidth="1.5"/></svg>
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed" style={{color:item.color+'bb'}}>{item.desc}</p>
+                <p className="text-sm leading-relaxed text-gray-700">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -633,17 +655,17 @@ function Eligibility() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             Kelayakan Pasien
           </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Kriteria Kelayakan</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Kriteria Kelayakan</h2>
           <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
             Pastikan setiap pasien memenuhi semua kriteria sebelum data dimasukkan ke dalam sistem survei.
           </p>
         </div>
 
-        <div className="fade-in-up mb-8">
-          <div className="inline-flex bg-white rounded-xl p-1.5 shadow-sm border border-pharma-100 gap-1">
+        <div className="fade-in-up mb-8 overflow-x-auto -mx-6 px-6">
+          <div className="inline-flex bg-white rounded-xl p-1.5 shadow-sm border border-pharma-100 gap-1" role="tablist">
             {tabs.map((tab, i) => (
-              <button key={i} onClick={() => setActiveTab(i)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              <button key={i} onClick={() => setActiveTab(i)} role="tab" aria-selected={activeTab === i}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                   activeTab === i ? 'tab-active shadow-sm' : 'tab-inactive'
                 }`}>
                 {tab.icon}
@@ -659,12 +681,118 @@ function Eligibility() {
   );
 }
 
+/* ── Icon — satu set ikon garis (menggantikan emoji) ── */
+function Icon({ name, size = 20, strokeWidth = 1.9 }) {
+  const paths = {
+    user: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>,
+    heart: <><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/><path d="M3.5 12h4l2-3 3 6 2-3h6"/></>,
+    pill: <><path d="M10.5 20.5a4.95 4.95 0 0 1-7-7l10-10a4.95 4.95 0 0 1 7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></>,
+    consent: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></>,
+    liver: <><path d="M3 10c0-3 3-5 7-5h6c3 0 5 2 5 4 0 4-5 9-10 9-4 0-8-3-8-8z"/><path d="M12 5v8"/></>,
+    drop: <><path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.3 0z"/></>,
+    baby: <><circle cx="12" cy="6" r="3"/><path d="M12 9v4"/><path d="M8 21v-3a4 4 0 0 1 8 0v3"/><path d="M8 13h8"/></>,
+    alert: <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
+    activity: <><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></>,
+    clipboard: <><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></>,
+    handshake: <><path d="M11 17l2 2a1 1 0 1 0 3-3"/><path d="M14 14l2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="M21 3l1 11h-2"/><path d="M3 3L2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></>,
+    inbox: <><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></>,
+    pen: <><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></>,
+    database: <><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></>,
+    lock: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {paths[name]}
+    </svg>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   InformedConsent — wajib untuk semua pasien
+   ══════════════════════════════════════════════════════════════════ */
+function InformedConsent() {
+  const steps = [
+    { icon: 'handshake', title: 'Tandatangani MoU', desc: 'Lokasi & dokter menandatangani MoU keikutsertaan Crezet Clinical Survey.' },
+    { icon: 'inbox', title: 'Terima Formulir IC', desc: 'Formulir informed consent resmi diberikan oleh tim survei setelah MoU ditandatangani.' },
+    { icon: 'pen', title: 'Pasien Menandatangani', desc: 'Setiap pasien membaca dan menandatangani formulir IC sebelum diikutsertakan.' },
+    { icon: 'database', title: 'Mulai Pencatatan Data', desc: 'Data pasien baru boleh dimasukkan setelah IC ditandatangani.' },
+  ];
+
+  return (
+    <section id="consent" className="py-20 md:py-24 bg-white">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid lg:grid-cols-5 gap-10 lg:gap-14 items-start mb-14">
+          <div className="lg:col-span-3 fade-in-up">
+            <span className="badge text-pharma-500 mb-4 block">
+              <Icon name="consent" size={14} strokeWidth={2} />
+              Informed Consent
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif',textWrap:'balance'}}>
+              Persetujuan pasien wajib sebelum data dicatat
+            </h2>
+            <p className="text-gray-600 text-lg leading-relaxed max-w-xl" style={{textWrap:'pretty'}}>
+              Informed consent (IC) <strong className="text-pharma-900">harus digunakan untuk semua pasien</strong> yang diikutsertakan dalam Crezet Clinical Survey — tanpa pengecualian.
+            </p>
+          </div>
+
+          <div className="lg:col-span-2 fade-in-up delay-100">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-xl bg-white text-amber-700 flex items-center justify-center flex-shrink-0 border border-amber-200">
+                  <Icon name="alert" size={20} />
+                </span>
+                <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest" style={{background:'#fef3c7',color:'#92400e'}}>
+                  Wajib · Semua Pasien
+                </span>
+              </div>
+              <p className="text-amber-900 text-sm leading-relaxed">
+                Pasien tanpa formulir IC yang telah ditandatangani <strong>tidak dapat diikutsertakan</strong> dan datanya tidak boleh dimasukkan ke dalam sistem survei.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+          {steps.map((s, i) => (
+            <li key={i} className={`fade-in-up delay-${(i+1)*100} relative bg-pharma-50 rounded-2xl p-6 border border-pharma-100`}>
+              <div className="flex items-center justify-between mb-5">
+                <span className="w-11 h-11 rounded-xl bg-white shadow-sm text-pharma-600 flex items-center justify-center">
+                  <Icon name={s.icon} size={22} />
+                </span>
+                <span className="font-mono text-sm font-semibold text-pharma-300" style={{fontFamily:'DM Mono,monospace'}}>0{i+1}</span>
+              </div>
+              <h3 className="font-display font-semibold text-pharma-900 mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>{s.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div className="fade-in-up bg-pharma-950 rounded-3xl p-7 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+          <span className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 text-teal-400" style={{background:'rgba(45,212,191,0.12)',border:'1px solid rgba(45,212,191,0.3)'}}>
+            <Icon name="lock" size={26} />
+          </span>
+          <div className="flex-1">
+            <h3 className="font-display font-bold text-white text-xl mb-2" style={{fontFamily:'DM Sans,sans-serif'}}>Formulir IC sudah disediakan</h3>
+            <p className="text-white/70 text-sm md:text-base leading-relaxed" style={{textWrap:'pretty'}}>
+              Formulir informed consent resmi disiapkan oleh tim Crezet Clinical Survey dan <strong className="text-white">akan diberikan setelah Anda menandatangani MoU keikutsertaan</strong>. Formulir tidak tersedia untuk diunduh dari halaman ini.
+            </p>
+          </div>
+          <a href="#form" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-pharma-900 font-semibold text-sm hover:bg-pharma-50 transition-colors flex-shrink-0">
+            Lengkapi Data MoU
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Timeline ── */
 function Timeline() {
   const steps = [
     {
       week: 'Minggu ke-0', label: 'Awal / Baseline', badge: 'Kunjungan 1', color: '#3b6fe8',
-      items: ['Konfirmasi eligibilitas pasien','Pencatatan diagnosis dislipidemia','Dokumentasi dosis Crezet awal','Data lab LDL & HDL (±30 hari)','Evaluasi CV Risk (ESC 2025)','Riwayat pengobatan sebelumnya'],
+      items: ['Informed consent ditandatangani pasien','Konfirmasi eligibilitas pasien','Pencatatan diagnosis dislipidemia','Dokumentasi dosis Crezet awal','Data lab LDL & HDL (±30 hari)','Evaluasi CV Risk (ESC 2025)','Riwayat pengobatan sebelumnya'],
     },
     {
       week: 'Minggu ke-12', label: 'Pengamatan Rutin I', badge: 'Toleransi ±4 minggu', color: '#0d9488',
@@ -677,14 +805,14 @@ function Timeline() {
   ];
 
   return (
-    <section id="timeline" className="py-24 bg-white">
+    <section id="timeline" className="py-20 md:py-24 bg-pharma-50">
       <div className="max-w-6xl mx-auto px-6">
         <div className="fade-in-up mb-16">
           <span className="badge text-pharma-500 mb-4 block">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Timeline
           </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Alur Pengumpulan Data</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Alur Pengumpulan Data</h2>
           <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
             Tiga titik pengamatan selama 24 minggu untuk memastikan data longitudinal yang komprehensif.
           </p>
@@ -731,7 +859,7 @@ function Timeline() {
         </div>
 
         <div className="fade-in-up mt-10 flex justify-center">
-          <div className="inline-flex items-center gap-3 bg-pharma-50 rounded-2xl px-8 py-4 border border-pharma-100">
+          <div className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-white rounded-2xl px-6 md:px-8 py-4 border border-pharma-100 text-center">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b6fe8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span className="text-pharma-700 font-medium">Total durasi pengamatan:</span>
             <span className="font-display font-bold text-pharma-900 text-lg" style={{fontFamily:'DM Sans,sans-serif'}}>24 Minggu (±8 minggu)</span>
@@ -1928,6 +2056,8 @@ function FAQ() {
 
   const faqs = [
     {q:'Bagaimana jika data lab tidak tersedia?',a:'Wajib mencantumkan keterangan "Tidak Dilakukan/Tidak Tersedia" pada kolom yang bersangkutan. Estimasi, interpolasi, atau penggunaan data dari sumber lain tidak diperkenankan dalam kondisi apa pun. Integritas data adalah prioritas utama.',tag:'Data Lab'},
+    {q:'Apakah informed consent wajib untuk setiap pasien?',a:'Ya. Informed consent harus digunakan untuk semua pasien yang diikutsertakan dalam Crezet Clinical Survey, tanpa pengecualian. Data pasien hanya boleh dimasukkan setelah formulir IC ditandatangani.',tag:'Informed Consent'},
+    {q:'Di mana saya mendapatkan formulir informed consent?',a:'Formulir informed consent sudah disediakan oleh tim Crezet Clinical Survey dan akan diberikan setelah Anda menandatangani MoU keikutsertaan. Formulir tidak dapat diunduh dari halaman ini.',tag:'Informed Consent'},
     {q:'Apa saja dosis Crezet yang didokumentasikan?',a:'Dosis yang valid untuk didokumentasikan adalah: 10/5 mg, 10/10 mg, atau 10/20 mg. Pastikan dosis yang dicatat sesuai dengan dosis aktual yang diberikan kepada pasien pada setiap titik pengamatan.',tag:'Dosis'},
     {q:'Bagaimana pelaporan jika terjadi efek samping?',a:'Dokumentasikan semua Adverse Event (AE) dan Serious Adverse Event (SAE) yang terjadi selama periode pengamatan. Jika efek samping dianggap signifikan secara klinis, sertakan nilai SGPT, SGOT, dan CK yang relevan. Semua kejadian harus dilaporkan tanpa terkecuali.',tag:'AE / SAE'},
     {q:'Apakah pasien yang menghentikan Crezet di tengah studi tetap dicatat?',a:'Ya. Pasien yang menghentikan penggunaan Crezet di tengah periode survei tetap harus didokumentasikan hingga titik penghentian, termasuk alasan penghentian (jika tersedia). Data parsial tetap bernilai untuk analisis.',tag:'Penghentian Terapi'},
@@ -1941,7 +2071,7 @@ function FAQ() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             Pertanyaan Umum
           </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>FAQ</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>FAQ</h2>
           <p className="text-gray-500 text-lg">Jawaban untuk pertanyaan yang paling sering diajukan.</p>
         </div>
 
@@ -1982,7 +2112,7 @@ function DoseCard() {
   ];
 
   return (
-    <section className="py-16 bg-pharma-50">
+    <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         <div className="fade-in-up bg-gradient-to-br from-pharma-800 to-pharma-950 rounded-3xl p-8 md:p-12 shadow-xl">
           <div className="text-center mb-10 max-w-2xl mx-auto">
@@ -2171,7 +2301,7 @@ function Documents({ formCompleted, sessionPassword }) {
               Dokumen Referensi
             </span>
             
-            <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Akses Terkunci</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Akses Terkunci</h2>
             
             <p className="text-gray-600 text-lg mb-2 max-w-xl mx-auto leading-relaxed" style={{textWrap:'pretty'}}>
               Untuk menjaga integritas survei dan kerahasiaan data, dokumen referensi hanya dapat diakses setelah pendaftaran selesai.
@@ -2227,7 +2357,7 @@ function Documents({ formCompleted, sessionPassword }) {
             </svg>
             Dokumen Panduan
           </span>
-          <h2 className="font-display text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Unduh Dokumen Referensi</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-pharma-900 mb-4" style={{fontFamily:'DM Sans,sans-serif'}}>Unduh Dokumen Referensi</h2>
           <p className="text-gray-500 text-lg max-w-xl" style={{textWrap:'pretty'}}>
             Seluruh panduan teknis yang diperlukan untuk pelaksanaan survei klinis Crezet 2026. Gunakan password sesi yang telah diberikan untuk membuka setiap dokumen.
           </p>
@@ -2525,6 +2655,7 @@ function App() {
       <Hero />
       <DataIntegrity />
       <Eligibility />
+      <InformedConsent />
       <Timeline />
       <DoseCard />
       <SurveyForm 

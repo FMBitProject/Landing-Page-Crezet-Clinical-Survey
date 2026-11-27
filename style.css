@@ -126,3 +126,16 @@
       background: rgba(255,255,255,0.9);
       border-bottom: 1px solid rgba(59,111,232,0.1);
     }
+    /* Fokus keyboard — terlihat jelas di latar terang maupun gelap */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [role="tab"]:focus-visible {
+      outline: 2px solid #14b8a6;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+    section[id] { scroll-margin-top: 72px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .fade-in-up { opacity: 1; transform: none; }
+    }
