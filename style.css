@@ -139,3 +139,25 @@
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       .fade-in-up { opacity: 1; transform: none; }
     }
+
+    /* Hero — grid hover (pola block-hero) */
+    .hero-hover-bg {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+      grid-auto-rows: 56px;
+      overflow: hidden;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+              mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+    }
+    .hero-hover-bg > div {
+      border-right: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background-color 0.8s ease;
+    }
+    .hero-hover-bg > div:hover {
+      background-color: rgba(45,212,191,0.18);
+      transition: background-color 0s;
+    }
+    /* Hero — marquee pill statistik (HP) */
+    @keyframes hero-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .hero-marquee { animation: hero-marquee 16s linear infinite; }

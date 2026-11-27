@@ -273,65 +273,106 @@ function Navbar() {
   );
 }
 
-/* ── Hero ── */
+/* ── Hero — tata letak diadaptasi dari pola "block-hero" (21st.dev), konten Crezet ── */
+const heroStats = [
+  { value: '30+', label: 'Lokasi Aktif' },
+  { value: '24', label: 'Minggu Pengamatan' },
+  { value: '3', label: 'Varian Dosis' },
+  { value: '100%', label: 'Data Terenkripsi' },
+];
+
+const heroDoses = [
+  { label: '10/5 mg', color: '#84cc16' },
+  { label: '10/10 mg', color: '#60a5fa' },
+  { label: '10/20 mg', color: '#fb923c' },
+];
+
+function HeroStatItems() {
+  return (
+    <>
+      {heroStats.map((item, i) => (
+        <React.Fragment key={item.label}>
+          <span className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap">
+            <span className="font-semibold text-white">{item.value}</span>
+            <span className="text-white/60">{item.label}</span>
+          </span>
+          {i < heroStats.length - 1 && <span aria-hidden="true" className="h-3.5 w-px shrink-0 bg-white/20" />}
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
+/* Grid latar yang selnya menyala saat disentuh kursor */
+function HeroHoverBg() {
+  return (
+    <div aria-hidden="true" className="hero-hover-bg absolute inset-0 z-0">
+      {Array.from({ length: 600 }).map((_, i) => <div key={i} />)}
+    </div>
+  );
+}
+
 function Hero() {
   return (
-    <section className="hero-bg hero-grid min-h-screen flex items-center pt-16 relative overflow-hidden">
-      <div style={{position:'absolute',top:'-10%',right:'-5%',width:'500px',height:'500px',background:'radial-gradient(circle,rgba(59,111,232,0.3) 0%,transparent 70%)',pointerEvents:'none'}}></div>
-      <div style={{position:'absolute',bottom:'-15%',left:'-8%',width:'600px',height:'600px',background:'radial-gradient(circle,rgba(20,184,166,0.15) 0%,transparent 70%)',pointerEvents:'none'}}></div>
+    <section aria-labelledby="hero-heading" className="hero-bg min-h-screen flex items-center pt-16 relative overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute left-1/2 -translate-x-1/2 z-0"
+        style={{top:'-120px', width:'min(900px, 120vw)', height:'380px', opacity:0.55, filter:'blur(140px)',
+          background:'linear-gradient(90deg, #3b6fe8 0%, #2550cc 50%, #14b8a6 100%)'}} />
+      <HeroHoverBg />
 
-      <div className="max-w-6xl mx-auto px-6 py-24 w-full">
-        <div className="max-w-3xl">
-          <div className="fade-in-up mb-8 inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2">
-            <span className="w-2 h-2 rounded-full bg-teal-400" style={{animation:'pulse 2s infinite'}}></span>
-            <span className="text-white/80 text-xs font-medium tracking-widest uppercase">Daewoong Pharmaceutical Indonesia · 2026</span>
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-20 w-full flex flex-col items-center gap-9 pointer-events-none">
+        {/* Pill statistik: marquee di HP, satu baris di layar lebih besar */}
+        <div className="fade-in-up w-full flex justify-center pointer-events-auto">
+          <div className="sm:hidden w-full max-w-xs overflow-hidden rounded-full border border-white/15 bg-white/5 px-1.5 py-1">
+            <div className="hero-marquee flex w-max">
+              {[0, 1].map(k => (
+                <div key={k} className="flex items-center" aria-hidden={k === 1 ? 'true' : undefined}>
+                  <HeroStatItems />
+                  <span aria-hidden="true" className="h-3.5 w-px shrink-0 bg-white/20" />
+                </div>
+              ))}
+            </div>
           </div>
-
-          <h1 className="fade-in-up delay-100 font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6" style={{fontFamily:'DM Sans,sans-serif',fontWeight:700}}>
-            Panduan Survei<br/>
-            <span className="text-teal-400">Klinis Crezet</span>
-            <br/>2026
-          </h1>
-
-          <p className="fade-in-up delay-200 text-white/75 text-lg md:text-xl leading-relaxed mb-8 max-w-xl" style={{textWrap:'pretty'}}>
-            Memastikan keseragaman, kelengkapan, dan akurasi data praktik klinis rutin untuk kualitas analisis survei terbaik.
-          </p>
-
-          <div className="fade-in-up delay-300 flex flex-wrap gap-3 mb-12">
-            <a href="#form" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-pharma-900 font-semibold text-sm shadow-lg hover:bg-pharma-50 transition-colors">
-              Mulai Pendaftaran
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a href="#consent" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/25 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
-              Syarat Informed Consent
-            </a>
-          </div>
-
-          <div className="fade-in-up delay-400 grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/15 bg-white/15 max-w-4xl">
-            {[
-              {label:'Lokasi Survei', num:'30+ Lokasi Aktif'},
-              {label:'Durasi Pengamatan', num:'24 Minggu (6 Bulan)'},
-              {label:'Tersedia 3 Dosis', num:'10/5 · 10/10 · 10/20 mg'},
-              {label:'Keamanan Data', num:'100% Terenkripsi'},
-            ].map(s => (
-              <div key={s.label} className="text-white bg-pharma-950/60 px-5 py-4">
-                <div className="text-white/55 text-[11px] mb-1.5 uppercase tracking-wider">{s.label}</div>
-                <div className="font-display font-bold text-base md:text-lg leading-tight" style={{fontFamily:'DM Sans,sans-serif'}}>{s.num}</div>
-              </div>
-            ))}
+          <div className="hidden sm:inline-flex items-center rounded-full border border-white/15 bg-white/5 px-1.5 py-1 backdrop-blur-sm">
+            <HeroStatItems />
           </div>
         </div>
-      </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
-        <span className="text-xs tracking-widest uppercase">Gulir ke bawah</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{animation:'float 2s ease-in-out infinite'}}>
-          <path d="M8 3v10M3 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-        </svg>
-      </div>
+        <div className="fade-in-up delay-100 flex flex-col items-center gap-6 text-center">
+          <h1 id="hero-heading" className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white md:leading-none" style={{fontFamily:'DM Sans,sans-serif'}}>
+            Panduan Survei Klinis
+            <span className="block text-teal-400 mt-2">Crezet 2026</span>
+          </h1>
+          <p className="max-w-2xl text-base md:text-lg md:leading-7 text-white/75" style={{textWrap:'pretty'}}>
+            Memastikan keseragaman, kelengkapan, dan akurasi data praktik klinis rutin untuk kualitas analisis survei terbaik.
+          </p>
+        </div>
 
-      <style>{`@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}} @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
+        <div className="fade-in-up delay-200 flex flex-wrap items-center justify-center gap-4 pointer-events-auto">
+          <a href="#form" className="inline-flex h-11 items-center gap-2 rounded-lg bg-white px-6 text-sm font-semibold text-pharma-900 hover:bg-white/90 transition-colors">
+            Mulai Pendaftaran
+          </a>
+          <a href="#consent" className="inline-flex h-11 items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
+            Syarat Informed Consent
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+        </div>
+
+        {/* Baris dosis — menggantikan baris ikon teknologi */}
+        <ul className="fade-in-up delay-300 flex flex-wrap items-center justify-center gap-3" aria-label="Dosis Crezet yang didokumentasikan">
+          {heroDoses.map(d => (
+            <li key={d.label} className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3.5 py-1.5 text-sm text-white/80 font-mono" style={{fontFamily:'DM Mono,monospace'}}>
+              <span className="w-2 h-2 rounded-full" style={{background:d.color}} />
+              {d.label}
+            </li>
+          ))}
+        </ul>
+
+        <div className="fade-in-up delay-400 inline-flex items-center gap-2 rounded-full bg-teal-400/10 border border-teal-400/20 px-4 py-2.5 text-xs font-medium text-white/80">
+          Diselenggarakan oleh
+          <img src="logo_1.png" alt="Daewoong Pharmaceutical Indonesia" className="h-4 w-auto" style={{filter:'brightness(0) invert(1)'}} />
+        </div>
+      </div>
     </section>
   );
 }
