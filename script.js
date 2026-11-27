@@ -310,7 +310,7 @@ function Hero() {
 
           <div className="fade-in-up delay-400 grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/15 bg-white/15 max-w-4xl">
             {[
-              {label:'Lokasi Survei', num:'15 Aktif · 10+ Potensial'},
+              {label:'Lokasi Survei', num:'30+ Lokasi Aktif'},
               {label:'Durasi Pengamatan', num:'24 Minggu (6 Bulan)'},
               {label:'Tersedia 3 Dosis', num:'10/5 · 10/10 · 10/20 mg'},
               {label:'Keamanan Data', num:'100% Terenkripsi'},
